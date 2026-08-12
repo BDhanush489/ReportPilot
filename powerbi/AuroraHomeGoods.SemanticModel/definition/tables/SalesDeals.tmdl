@@ -1,0 +1,77 @@
+table SalesDeals
+
+	partition SalesDeals-Partition = m
+		mode: import
+		source =
+			let
+				Source = Excel.Workbook(File.Contents(SampleDataFolder & "sales_pipeline.xlsx"), null, true),
+				SheetTable = Source{[Item="Deals",Kind="Sheet"]}[Data],
+				Promoted = Table.PromoteHeaders(SheetTable, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,{{"deal_id", Int64.Type}, {"close_date", type date}, {"sales_rep", type text}, {"product", type text}, {"region", type text}, {"lead_source", type text}, {"deal_stage", type text}, {"amount_usd", type number}, {"potential_amount_usd", type number}, {"days_to_close", Int64.Type}})
+			in
+				Typed
+
+	measure 'Deals Won' = CALCULATE(COUNTROWS(SalesDeals), SalesDeals[deal_stage] = "Closed Won")
+		formatString: #,##0
+
+	measure 'Deals Lost' = CALCULATE(COUNTROWS(SalesDeals), SalesDeals[deal_stage] = "Closed Lost")
+		formatString: #,##0
+
+	measure 'Win Rate' = DIVIDE([Deals Won], [Deals Won] + [Deals Lost])
+		formatString: 0.0%
+
+	measure 'Sales Revenue' = CALCULATE(SUM(SalesDeals[amount_usd]), SalesDeals[deal_stage] = "Closed Won")
+		formatString: $#,##0
+
+	measure 'Avg Deal Size' = DIVIDE([Sales Revenue], [Deals Won])
+		formatString: $#,##0
+
+	column deal_id
+		dataType: int64
+		sourceColumn: deal_id
+		summarizeBy: none
+
+	column close_date
+		dataType: dateTime
+		sourceColumn: close_date
+		summarizeBy: none
+
+	column sales_rep
+		dataType: string
+		sourceColumn: sales_rep
+		summarizeBy: none
+
+	column product
+		dataType: string
+		sourceColumn: product
+		summarizeBy: none
+
+	column region
+		dataType: string
+		sourceColumn: region
+		summarizeBy: none
+
+	column lead_source
+		dataType: string
+		sourceColumn: lead_source
+		summarizeBy: none
+
+	column deal_stage
+		dataType: string
+		sourceColumn: deal_stage
+		summarizeBy: none
+
+	column amount_usd
+		dataType: double
+		sourceColumn: amount_usd
+		summarizeBy: sum
+
+	column potential_amount_usd
+		dataType: double
+		sourceColumn: potential_amount_usd
+		summarizeBy: sum
+
+	column days_to_close
+		dataType: int64
+		sourceColumn: days_to_close
+		summarizeBy: average

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_sales-0-monthly-revenue---win-rate",
+  "position": {
+    "x": 20,
+    "y": 170,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesMonthly"
+                    }
+                  },
+                  "Property": "month"
+                }
+              },
+              "queryRef": "SalesMonthly.month",
+              "nativeQueryRef": "month"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesMonthly"
+                    }
+                  },
+                  "Property": "revenue_usd"
+                }
+              },
+              "queryRef": "SalesMonthly.revenue_usd",
+              "nativeQueryRef": "revenue_usd"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesMonthly"
+                    }
+                  },
+                  "Property": "win_rate"
+                }
+              },
+              "queryRef": "SalesMonthly.win_rate",
+              "nativeQueryRef": "win_rate"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

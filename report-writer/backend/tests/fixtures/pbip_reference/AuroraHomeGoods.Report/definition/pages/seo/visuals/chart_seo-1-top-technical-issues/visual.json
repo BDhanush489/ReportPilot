@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_seo-1-top-technical-issues",
+  "position": {
+    "x": 20,
+    "y": 580,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoTopIssues"
+                    }
+                  },
+                  "Property": "issue"
+                }
+              },
+              "queryRef": "SeoTopIssues.issue",
+              "nativeQueryRef": "issue"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoTopIssues"
+                    }
+                  },
+                  "Property": "count"
+                }
+              },
+              "queryRef": "SeoTopIssues.count",
+              "nativeQueryRef": "count"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

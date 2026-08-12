@@ -1,0 +1,11 @@
+{
+  "version": "2.0",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/platform/platformProperties.json",
+  "config": {
+    "logicalId": "cc5e29f7-a170-4dc3-ac00-562abb438cbc"
+  },
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "AuroraHomeGoods"
+  }
+}

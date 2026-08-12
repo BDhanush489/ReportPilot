@@ -1,0 +1,39 @@
+table AnalyticsTotals
+
+	partition AnalyticsTotals-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"sessions", "new_users", "conversions", "revenue_usd", "conversion_rate"}, {{301090, 200057, 7592, 596957.73, 2.52}})
+			in
+				Source
+
+	column sessions
+		dataType: int64
+		sourceColumn: sessions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column new_users
+		dataType: int64
+		sourceColumn: new_users
+		summarizeBy: sum
+		formatString: #,##0
+
+	column conversions
+		dataType: int64
+		sourceColumn: conversions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column conversion_rate
+		dataType: double
+		sourceColumn: conversion_rate
+		summarizeBy: average
+		formatString: 0.0"%"

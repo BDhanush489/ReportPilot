@@ -1,0 +1,36 @@
+{
+  "id": "analytics_only",
+  "version": 1,
+  "label": "Analytics Only (internal fixture)",
+  "hidden": true,
+  "tone": "executive",
+  "sections": [
+    {
+      "key": "analytics",
+      "label": "Web Analytics",
+      "charts": [
+        {
+          "caption": "Revenue by channel",
+          "builder": "channel_revenue_bar_chart",
+          "builder_args": ["by_channel"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.analytics.by_channel"],
+          "shape": "records",
+          "x_field": "channel",
+          "y_field": "revenue_usd",
+          "requires_columns": ["revenue_usd"]
+        },
+        {
+          "caption": "Sessions by device",
+          "builder": "device_split_pie_chart",
+          "builder_args": ["by_device"],
+          "chart_type": "pie",
+          "metric_paths": ["metrics.analytics.by_device"],
+          "shape": "records",
+          "x_field": "device_category",
+          "y_field": "sessions"
+        }
+      ]
+    }
+  ]
+}

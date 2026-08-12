@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_revenue_trend",
+  "position": {
+    "x": 20,
+    "y": 140,
+    "z": 1000,
+    "width": 770,
+    "height": 340,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Date"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "Date.Date",
+              "nativeQueryRef": "Date"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "WebAnalytics"
+                    }
+                  },
+                  "Property": "Web Revenue"
+                }
+              },
+              "queryRef": "WebAnalytics.Web Revenue",
+              "nativeQueryRef": "Web Revenue"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

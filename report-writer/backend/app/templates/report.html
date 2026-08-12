@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page {
+    size: letter;
+    margin: 2.1cm 1.8cm 2.4cm 1.8cm;
+  }
+  body {
+    font-family: {{ theme.font_stack|safe }};
+    color: {{ theme.ink_primary }};
+    font-size: 10.2pt;
+    line-height: 1.5;
+  }
+  h1, h2, h3 { font-family: {{ theme.font_stack|safe }}; margin: 0; }
+  .cover {
+    page-break-after: always;
+    padding-top: 20%;
+  }
+  .cover-bar { height: 10px; background-color: {{ branding.primary_color or theme.categorical[0] }}; margin-bottom: 28px; }
+  .cover-logo { max-height: 46px; max-width: 220px; margin-bottom: 14px; }
+  .agency-name { font-size: 12pt; color: {{ theme.ink_secondary }}; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .report-title { font-size: 27pt; font-weight: bold; color: {{ theme.ink_primary }}; margin-bottom: 10px; }
+  .client-line { font-size: 13pt; color: {{ theme.ink_secondary }}; margin-bottom: 4px; }
+  .period-line { font-size: 10.5pt; color: {{ theme.ink_muted }}; }
+  .qa-badge {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 4px 11px;
+    border-radius: 3px;
+    font-size: 8.3pt;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+  .qa-badge-pass {
+    background-color: {{ theme.badge.PASS.bg }}; color: {{ theme.badge.PASS.text }}; border: 1px solid {{ theme.badge.PASS.border }};
+  }
+  .qa-badge-warn {
+    background-color: {{ theme.badge["PASS-WITH-WARNINGS"].bg }}; color: {{ theme.badge["PASS-WITH-WARNINGS"].text }}; border: 1px solid {{ theme.badge["PASS-WITH-WARNINGS"].border }};
+  }
+  .qa-badge-fail {
+    background-color: {{ theme.badge.FAIL.bg }}; color: {{ theme.badge.FAIL.text }}; border: 1px solid {{ theme.badge.FAIL.border }};
+  }
+  .draft-flag {
+    display: block;
+    margin-top: 26px;
+    padding: 8px 12px;
+    background-color: {{ theme.callout_warning_bg }};
+    border-left: 4px solid {{ theme.callout_warning_border }};
+    color: {{ theme.ink_secondary }};
+    font-size: 8.8pt;
+    width: 60%;
+  }
+
+  .section-heading {
+    font-size: 15pt;
+    font-weight: bold;
+    color: {{ theme.ink_primary }};
+    border-bottom: 2px solid {{ branding.accent_color or theme.categorical[3] }};
+    padding-bottom: 6px;
+    margin-top: 26px;
+    margin-bottom: 12px;
+  }
+  .exec-summary {
+    font-size: 11.2pt;
+    color: {{ theme.ink_primary }};
+    background-color: {{ theme.surface }};
+    border-left: 4px solid {{ branding.primary_color or theme.categorical[0] }};
+    padding: 12px 16px;
+    margin-bottom: 18px;
+  }
+  table.two-col { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+  table.two-col td { width: 50%; vertical-align: top; padding: 0 10px 0 0; }
+  .callout-title { font-size: 9.5pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .callout-good .callout-title { color: {{ theme.callout_good_text }}; }
+  .callout-watch .callout-title { color: {{ theme.callout_watch_text }}; }
+  ul.bullets { margin: 0 0 10px 0; padding-left: 16px; }
+  ul.bullets li { margin-bottom: 4px; }
+
+  .chart-block { margin: 8px 0 12px 0; }
+  .chart-block img { width: 15cm; }
+  .chart-caption { font-size: 8.3pt; color: {{ theme.ink_muted }}; margin-top: -4px; }
+  .chart-annotation {
+    font-size: 8pt; color: {{ theme.ink_secondary }}; margin-top: 2px;
+    padding-left: 8px; border-left: 2px solid {{ branding.accent_color or theme.categorical[3] }};
+  }
+
+  /* rec-box/dq-box render as one continuous card via a single-cell table,
+     not a div containing a title + <ul> as separate block children --
+     xhtml2pdf (unlike a real browser) doesn't reliably paint one continuous
+     background/border across a div's nested block children, so a plain div
+     here rendered as visibly disconnected boxes (title, then each bullet,
+     each with its own background and a gap). table.insights below already
+     used the single-cell-per-box pattern and always rendered correctly. */
+  table.rec-box { width: 100%; border-collapse: collapse; margin-top: 8px; margin-bottom: 4px; }
+  table.rec-box td {
+    background-color: {{ theme.surface }};
+    border-left: 4px solid {{ branding.accent_color or theme.categorical[3] }};
+    padding: 10px 14px;
+  }
+  .rec-box .callout-title { color: {{ theme.ink_secondary }}; }
+
+  .next-steps { margin-top: 24px; }
+  .next-steps ol { padding-left: 18px; }
+  .next-steps li { margin-bottom: 6px; }
+
+  table.insights { width: 100%; border-collapse: separate; border-spacing: 8px 0; margin-bottom: 18px; table-layout: fixed; }
+  table.insights td { vertical-align: top; padding: 10px 10px; border: 1px solid {{ theme.gridline }}; border-radius: 4px; }
+  .insight-title { font-size: 8.3pt; font-weight: bold; text-transform: uppercase; letter-spacing: 0.4px; color: {{ theme.ink_muted }}; margin-bottom: 4px; }
+  .insight-headline { font-size: 15pt; font-weight: bold; margin-bottom: 2px; }
+  .insight-sub { font-size: 8pt; color: {{ theme.ink_secondary }}; margin-bottom: 6px; }
+  .insight-detail { font-size: 8pt; color: {{ theme.ink_secondary }}; line-height: 1.4; }
+  .insight-score .insight-headline { color: {{ branding.primary_color or theme.categorical[0] }}; }
+  .insight-opportunity .insight-headline { color: {{ theme.insight_tag_colors.opportunity }}; }
+  .insight-risk .insight-headline { color: {{ theme.insight_tag_colors.risk }}; }
+  .insight-efficiency .insight-headline { color: {{ theme.insight_tag_colors.efficiency }}; }
+
+  table.dq-box { width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 8.6pt; }
+  table.dq-box td {
+    background-color: {{ theme.dq_bg }};
+    border-left: 4px solid {{ theme.dq_border }};
+    padding: 10px 14px;
+    color: {{ theme.dq_text }};
+  }
+  .dq-box .callout-title { color: {{ theme.dq_title }}; }
+  .dq-box ul.bullets { margin-top: 4px; }
+
+  .footer-note {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid {{ theme.gridline }};
+    font-size: 8pt;
+    color: {{ theme.ink_muted }};
+  }
+  .disclaimer {
+    margin-top: 8px;
+    font-size: 7.6pt;
+    color: {{ theme.ink_muted }};
+    font-style: italic;
+  }
+  .signature-block {
+    margin-top: 34px;
+    padding-top: 14px;
+    border-top: 1px solid {{ theme.gridline }};
+  }
+  .signature-name { font-size: 10.5pt; font-weight: bold; color: {{ theme.ink_primary }}; }
+  .signature-title { font-size: 9pt; color: {{ theme.ink_secondary }}; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-bar"></div>
+  {% if branding.logo_data_uri %}
+  <img class="cover-logo" src="{{ branding.logo_data_uri }}" alt="{{ branding.agency_name or 'Agency' }} logo">
+  {% endif %}
+  <div class="agency-name">{{ branding.agency_name or "Your Agency" }}</div>
+  <div class="report-title">{{ report.report_title }}</div>
+  <div class="client-line">Prepared for {{ branding.client_name or "Client" }}</div>
+  <div class="period-line">Reporting period: {{ report.period_label }} &nbsp;&middot;&nbsp; Generated {{ generated_date }}</div>
+  {% if qa and qa.badge %}
+  {% set badge_class = "qa-badge-pass" if qa.badge == "PASS" else ("qa-badge-warn" if qa.badge == "PASS-WITH-WARNINGS" else "qa-badge-fail") %}
+  <div class="qa-badge {{ badge_class }}">QA: {{ qa.badge }}</div>
+  {% endif %}
+  {% if not report._ai_generated %}
+  <div class="draft-flag">
+    Draft narrative — this preview was generated without an AI model connected.
+    Set an ANTHROPIC_API_KEY to enable AI-authored analysis for this report.
+  </div>
+  {% endif %}
+</div>
+
+<div class="exec-summary">{{ report.executive_summary }}</div>
+
+{% if report.data_quality and report.data_quality.total_issues_found %}
+<table class="dq-box"><tr><td>
+  <div class="callout-title">
+    Data Quality — {{ report.data_quality.total_values_affected }} value(s) auto-corrected across
+    {{ report.data_quality.total_issues_found }} check(s) before analysis
+  </div>
+  <ul class="bullets">
+    {% for item in report.data_quality.details %}<li>{{ item.message }}</li>{% endfor %}
+  </ul>
+</td></tr></table>
+{% endif %}
+
+{% if report.insights %}
+{% set insight_width = (100 / report.insights|length)|round(2) %}
+<table class="insights">
+  <tr>
+    {% for card in report.insights %}
+    <td class="insight-{{ card.tag }}" style="width: {{ insight_width }}%;">
+      <div class="insight-title">{{ card.title }}</div>
+      <div class="insight-headline">{{ card.headline }}</div>
+      {% if card.sub %}<div class="insight-sub">{{ card.sub }}</div>{% endif %}
+      <div class="insight-detail">{{ card.detail }}</div>
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+{% endif %}
+
+<table class="two-col">
+  <tr>
+    <td class="callout-good">
+      <div class="callout-title">Highlights</div>
+      <ul class="bullets">
+        {% for h in report.highlights %}<li>{{ h }}</li>{% endfor %}
+      </ul>
+    </td>
+    <td class="callout-watch">
+      <div class="callout-title">Watch-outs</div>
+      <ul class="bullets">
+        {% for w in report.watchouts %}<li>{{ w }}</li>{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+{% for section in report.sections %}
+<div class="section">
+  <div class="section-heading">{{ section.heading }}</div>
+  <p>{{ section.narrative }}</p>
+
+  {% for chart in section.charts %}
+  <div class="chart-block">
+    <img src="data:image/png;base64,{{ chart.img }}">
+    <div class="chart-caption">{{ chart.caption }}</div>
+    {% if chart.annotation %}
+    <div class="chart-annotation">{{ chart.annotation.text }}</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+
+  {% if section.recommendations %}
+  <table class="rec-box"><tr><td>
+    <div class="callout-title">Recommended actions</div>
+    <ul class="bullets">
+      {% for r in section.recommendations %}<li>{{ r }}</li>{% endfor %}
+    </ul>
+  </td></tr></table>
+  {% endif %}
+</div>
+{% endfor %}
+
+<div class="next-steps">
+  <div class="section-heading">Next Steps</div>
+  <ol>
+    {% for step in report.next_steps %}<li>{{ step }}</li>{% endfor %}
+  </ol>
+</div>
+
+{% if branding.signature_name %}
+<div class="signature-block">
+  <div class="signature-name">{{ branding.signature_name }}</div>
+  {% if branding.signature_title %}<div class="signature-title">{{ branding.signature_title }}</div>{% endif %}
+</div>
+{% endif %}
+
+<div class="footer-note">
+  {% if branding.footer_text %}
+  {{ branding.footer_text }}
+  {% else %}
+  Generated by {{ branding.agency_name or "Your Agency" }} on {{ generated_date }}.
+  Figures are computed directly from the uploaded source data.
+  {% endif %}
+  {% if branding.disclaimer_text %}
+  <div class="disclaimer">{{ branding.disclaimer_text }}</div>
+  {% endif %}
+</div>
+
+</body>
+</html>

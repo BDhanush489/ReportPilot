@@ -1,0 +1,65 @@
+table AnalyticsByChannel
+
+	partition AnalyticsByChannel-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"channel", "sessions", "conversions", "revenue_usd", "conversion_rate", "share_of_sessions_pct", "session_change_pct", "revenue_change_pct"}, {{"Organic Search", 111304, 2323, 184270.03, 2.09, 37.0, -28.7, -33.6}, {"Paid Search", 58269, 2056, 151050.21, 3.53, 19.4, -18.8, -11.4}, {"Direct", 35921, 1020, 95483.29, 2.84, 11.9, -20.1, -26.6}, {"Email", 26430, 1069, 92692.93, 4.04, 8.8, -20.0, -14.1}, {"Paid Social", 52141, 806, 50939.31, 1.55, 17.3, -5.5, -3.9}, {"Referral", 17025, 318, 22521.96, 1.87, 5.7, -19.7, -25.1}})
+			in
+				Source
+
+	measure 'Total Revenue' = SUM(AnalyticsByChannel[revenue_usd])
+		formatString: $#,##0.00
+
+	measure 'Total Sessions' = SUM(AnalyticsByChannel[sessions])
+		formatString: #,##0
+
+	measure 'Total Conversions' = SUM(AnalyticsByChannel[conversions])
+		formatString: #,##0
+
+	column channel
+		dataType: string
+		sourceColumn: channel
+		summarizeBy: none
+
+	column sessions
+		dataType: int64
+		sourceColumn: sessions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column conversions
+		dataType: int64
+		sourceColumn: conversions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column conversion_rate
+		dataType: double
+		sourceColumn: conversion_rate
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column share_of_sessions_pct
+		dataType: double
+		sourceColumn: share_of_sessions_pct
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column session_change_pct
+		dataType: double
+		sourceColumn: session_change_pct
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column revenue_change_pct
+		dataType: double
+		sourceColumn: revenue_change_pct
+		summarizeBy: average
+		formatString: 0.0"%"

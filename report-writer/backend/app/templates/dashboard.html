@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{{ branding.client_name or "Client" }} — Interactive Dashboard</title>
+<style>
+  body {
+    font-family: {{ theme.font_stack|safe }};
+    color: {{ theme.ink_primary }};
+    background: {{ theme.surface }};
+    margin: 0;
+    padding: 28px 32px;
+    line-height: 1.5;
+  }
+  h1, h2 { font-family: {{ theme.font_stack|safe }}; margin: 0; }
+  .header { margin-bottom: 18px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .header h1 { font-size: 20pt; }
+  .period { color: {{ theme.ink_muted }}; font-size: 10.5pt; margin-top: 4px; }
+
+  .qa-badge {
+    flex: none; font-size: 8.5pt; font-weight: bold; letter-spacing: 0.3px;
+    padding: 5px 12px; border-radius: 999px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .filters { margin: 16px 0; font-size: 10pt; }
+  .filters select { font-size: 10pt; padding: 4px 6px; }
+
+  .kpi-grid { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 8px; }
+  .kpi-card {
+    border: 1px solid {{ theme.gridline }};
+    border-radius: 8px;
+    padding: 14px 18px;
+    min-width: 170px;
+    cursor: pointer;
+    background: #ffffff;
+    transition: box-shadow 0.15s ease;
+  }
+  .kpi-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .kpi-card[data-drill=""] { cursor: default; }
+  .kpi-card .label {
+    font-size: 8.3pt; font-weight: bold; text-transform: uppercase;
+    letter-spacing: 0.4px; color: {{ theme.ink_muted }}; margin-bottom: 4px;
+  }
+  .kpi-card .value { font-size: 19pt; font-weight: bold; color: {{ branding.primary_color or theme.categorical[0] }}; }
+
+  .drill-panel {
+    display: none;
+    border-top: 2px solid {{ branding.accent_color or theme.categorical[3] }};
+    margin-top: 22px;
+    padding-top: 14px;
+  }
+  .drill-panel.active { display: block; }
+  #drill-title { font-size: 13pt; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { padding: 6px 10px; border-bottom: 1px solid {{ theme.gridline }}; text-align: left; }
+  th { color: {{ theme.ink_muted }}; text-transform: uppercase; font-size: 8pt; letter-spacing: 0.3px; }
+
+  .empty-state { color: {{ theme.ink_muted }}; font-size: 11pt; margin-top: 40px; }
+
+  .chart-highlights { margin-top: 26px; padding-top: 16px; border-top: 1px solid {{ theme.gridline }}; }
+  .chart-highlights h2 { font-size: 12pt; margin-bottom: 10px; }
+  .chart-highlights ul { list-style: none; margin: 0; padding: 0; }
+  .chart-highlights li {
+    font-size: 9.5pt; padding: 8px 0; border-bottom: 1px solid {{ theme.gridline }};
+  }
+  .chart-highlights .highlight-caption { font-weight: bold; color: {{ theme.ink_primary }}; }
+  .chart-highlights .highlight-text { color: {{ theme.ink_secondary }}; }
+
+  .period-comparison { margin-top: 22px; margin-bottom: 8px; }
+  .period-comparison h2 { font-size: 12pt; margin-bottom: 10px; }
+  .period-comparison td.delta-up { color: {{ theme.status.good }}; font-weight: bold; }
+  .period-comparison td.delta-down { color: {{ theme.status.critical }}; font-weight: bold; }
+  .period-comparison td.delta-flat { color: {{ theme.ink_muted }}; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display: flex; align-items: center; gap: 12px;">
+    {% if branding.logo_data_uri %}
+    <img src="{{ branding.logo_data_uri }}" alt="{{ branding.agency_name or 'Agency' }} logo"
+         style="max-height: 36px; max-width: 180px;">
+    {% endif %}
+    <div>
+      <h1>{{ branding.client_name or "Client" }} — Interactive Dashboard</h1>
+      {% if period_label %}<div class="period">Reporting period: {{ period_label }}</div>{% endif %}
+    </div>
+  </div>
+  {% if qa and qa.badge and theme.badge[qa.badge] is defined %}
+  {% set b = theme.badge[qa.badge] %}
+  <div class="qa-badge" data-testid="qa-badge" style="background: {{ b.bg }}; color: {{ b.text }}; border: 1px solid {{ b.border }};">
+    QA: {{ qa.badge }}
+  </div>
+  {% endif %}
+</div>
+
+{% if kpi_cards %}
+{% if channels %}
+<div class="filters">
+  <label for="channel-filter">Channel:</label>
+  <select id="channel-filter">
+    <option value="__all__">All channels</option>
+    {% for ch in channels %}<option value="{{ ch }}">{{ ch }}</option>{% endfor %}
+  </select>
+</div>
+{% endif %}
+
+<div class="kpi-grid" id="kpi-grid">
+  {% for card in kpi_cards %}
+  <div class="kpi-card" data-drill="{{ card.drill or '' }}" data-card-id="{{ card.id }}">
+    <div class="label">{{ card.label }}</div>
+    <div class="value" data-testid="kpi-value-{{ card.id }}">{{ card.formatted }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if period_comparison %}
+<div class="period-comparison" id="period-comparison">
+  <h2>Vs. prior report ({{ period_comparison.prior_period_label }})</h2>
+  <table>
+    <thead><tr><th>Metric</th><th>This period</th><th>Prior</th><th>Change</th></tr></thead>
+    <tbody>
+      {% for row in period_comparison.rows %}
+      <tr data-testid="period-comparison-row" data-direction="{{ row.direction }}">
+        <td>{{ row.source }}.{{ row.field }}</td>
+        <td>{{ row.current }}</td>
+        <td>{{ row.prior }}</td>
+        <td class="delta-{{ row.direction }}">
+          {% if row.pct_delta is not none %}{{ "%+.1f"|format(row.pct_delta) }}%{% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<div id="drill-panel" class="drill-panel">
+  <h2 id="drill-title"></h2>
+  <table id="drill-table"><thead></thead><tbody></tbody></table>
+</div>
+
+{% if chart_highlights %}
+<div class="chart-highlights" id="chart-highlights">
+  <h2>Notable points</h2>
+  <ul>
+    {% for h in chart_highlights %}
+    <li data-testid="chart-highlight" data-chart-caption="{{ h.caption }}">
+      <span class="highlight-caption">{{ h.caption }}:</span>
+      <span class="highlight-text">{{ h.annotation.text }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% else %}
+<p class="empty-state">No data available for this report.</p>
+{% endif %}
+
+<script id="dashboard-data" type="application/json">{{ payload_json|safe }}</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById('dashboard-data').textContent);
+  var drillPanel = document.getElementById('drill-panel');
+  var drillTitle = document.getElementById('drill-title');
+  var drillTable = document.getElementById('drill-table');
+  var filterEl = document.getElementById('channel-filter');
+  var currentDrillKey = null;
+
+  function formatCell(col, value) {
+    if (typeof value !== 'number') return value;
+    var lower = col.toLowerCase();
+    // Percent check first: a field like "revenue_change_pct" contains both
+    // "revenue" and "pct" — _pct/"rate" is the unambiguous signal, checking
+    // currency-ish substrings first would format a percentage as a dollar
+    // amount (caught live: "revenue_change_pct" rendering as "$-34").
+    if (lower.endsWith('_pct') || lower.indexOf('rate') !== -1) {
+      return value.toFixed(1) + '%';
+    }
+    if (lower.endsWith('_usd') || lower.indexOf('revenue') !== -1 || lower.indexOf('amount') !== -1) {
+      return '$' + Math.round(value).toLocaleString();
+    }
+    if (Number.isInteger(value)) return value.toLocaleString();
+    return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  function applyFilter(rows) {
+    if (!filterEl || !rows.length || !('channel' in rows[0])) return rows;
+    var val = filterEl.value;
+    if (val === '__all__') return rows;
+    return rows.filter(function (r) { return r.channel === val; });
+  }
+
+  function renderTable(rows) {
+    var thead = drillTable.querySelector('thead');
+    var tbody = drillTable.querySelector('tbody');
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+    if (!rows || !rows.length) {
+      tbody.innerHTML = '<tr><td>No rows for this selection.</td></tr>';
+      return;
+    }
+    var cols = Object.keys(rows[0]);
+    var headRow = document.createElement('tr');
+    cols.forEach(function (c) {
+      var th = document.createElement('th');
+      th.textContent = c.replace(/_/g, ' ');
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      cols.forEach(function (c) {
+        var td = document.createElement('td');
+        td.textContent = formatCell(c, r[c]);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  }
+
+  document.querySelectorAll('.kpi-card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var key = card.getAttribute('data-drill');
+      if (!key) return;
+      currentDrillKey = key;
+      drillTitle.textContent = card.querySelector('.label').textContent + ' — detail';
+      drillPanel.classList.add('active');
+      renderTable(applyFilter(DATA.drill_tables[key] || []));
+    });
+  });
+
+  if (filterEl) {
+    filterEl.addEventListener('change', function () {
+      if (currentDrillKey) renderTable(applyFilter(DATA.drill_tables[currentDrillKey] || []));
+    });
+  }
+})();
+</script>
+
+{% if branding.disclaimer_text %}
+<div style="margin-top: 28px; padding-top: 10px; border-top: 1px solid {{ theme.gridline }}; font-size: 8.5pt; font-style: italic; color: {{ theme.ink_muted }};">
+  {{ branding.disclaimer_text }}
+</div>
+{% endif %}
+
+</body>
+</html>

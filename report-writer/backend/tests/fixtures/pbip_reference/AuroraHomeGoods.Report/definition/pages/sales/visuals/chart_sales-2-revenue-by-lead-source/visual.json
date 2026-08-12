@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_sales-2-revenue-by-lead-source",
+  "position": {
+    "x": 20,
+    "y": 990,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "pieChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesByLeadSource"
+                    }
+                  },
+                  "Property": "lead_source"
+                }
+              },
+              "queryRef": "SalesByLeadSource.lead_source",
+              "nativeQueryRef": "lead_source"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesByLeadSource"
+                    }
+                  },
+                  "Property": "revenue_usd"
+                }
+              },
+              "queryRef": "SalesByLeadSource.revenue_usd",
+              "nativeQueryRef": "revenue_usd"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

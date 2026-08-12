@@ -1,0 +1,39 @@
+table SalesTotals
+
+	partition SalesTotals-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"revenue_usd", "deals_won", "deals_lost", "win_rate_pct", "avg_deal_size_usd"}, {{202706.76, 404, 200, 66.9, 501.75}})
+			in
+				Source
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column deals_won
+		dataType: int64
+		sourceColumn: deals_won
+		summarizeBy: sum
+		formatString: #,##0
+
+	column deals_lost
+		dataType: int64
+		sourceColumn: deals_lost
+		summarizeBy: sum
+		formatString: #,##0
+
+	column win_rate_pct
+		dataType: double
+		sourceColumn: win_rate_pct
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column avg_deal_size_usd
+		dataType: double
+		sourceColumn: avg_deal_size_usd
+		summarizeBy: average
+		formatString: $#,##0.00

@@ -1,0 +1,26 @@
+table SalesByLeadSource
+
+	partition SalesByLeadSource-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"lead_source", "revenue_usd", "deals_won"}, {{"Organic Search", 55738.03, 111}, {"Paid Search", 42910.56, 79}, {"Email", 31358.94, 69}, {"Paid Social", 31214.47, 64}, {"Referral", 23949.03, 42}, {"Trade Show", 17535.73, 39}})
+			in
+				Source
+
+	column lead_source
+		dataType: string
+		sourceColumn: lead_source
+		summarizeBy: none
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column deals_won
+		dataType: int64
+		sourceColumn: deals_won
+		summarizeBy: sum
+		formatString: #,##0

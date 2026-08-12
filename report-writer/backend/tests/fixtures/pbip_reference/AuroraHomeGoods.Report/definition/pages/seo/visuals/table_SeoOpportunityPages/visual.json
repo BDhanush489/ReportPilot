@@ -1,0 +1,93 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "table_SeoOpportunityPages",
+  "position": {
+    "x": 20,
+    "y": 1286,
+    "z": 1000,
+    "width": 860,
+    "height": 220,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoOpportunityPages"
+                    }
+                  },
+                  "Property": "url"
+                }
+              },
+              "queryRef": "SeoOpportunityPages.url",
+              "nativeQueryRef": "url"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoOpportunityPages"
+                    }
+                  },
+                  "Property": "impressions_28d"
+                }
+              },
+              "queryRef": "SeoOpportunityPages.impressions_28d",
+              "nativeQueryRef": "impressions_28d"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoOpportunityPages"
+                    }
+                  },
+                  "Property": "avg_position"
+                }
+              },
+              "queryRef": "SeoOpportunityPages.avg_position",
+              "nativeQueryRef": "avg_position"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoOpportunityPages"
+                    }
+                  },
+                  "Property": "ctr"
+                }
+              },
+              "queryRef": "SeoOpportunityPages.ctr",
+              "nativeQueryRef": "ctr"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoOpportunityPages"
+                    }
+                  },
+                  "Property": "clicks_28d"
+                }
+              },
+              "queryRef": "SeoOpportunityPages.clicks_28d",
+              "nativeQueryRef": "clicks_28d"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

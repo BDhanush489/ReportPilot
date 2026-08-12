@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_sales-1-revenue-by-sales-rep",
+  "position": {
+    "x": 20,
+    "y": 580,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesByRep"
+                    }
+                  },
+                  "Property": "sales_rep"
+                }
+              },
+              "queryRef": "SalesByRep.sales_rep",
+              "nativeQueryRef": "sales_rep"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesByRep"
+                    }
+                  },
+                  "Property": "revenue_usd"
+                }
+              },
+              "queryRef": "SalesByRep.revenue_usd",
+              "nativeQueryRef": "revenue_usd"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

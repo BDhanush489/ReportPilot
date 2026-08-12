@@ -1,0 +1,31 @@
+# Optional per-warehouse drivers for app/connectors/*.
+#
+# Deliberately NOT in requirements.txt: these are heavy vendor SDKs (the
+# Snowflake and BigQuery ones especially), and forcing every install to pull
+# all four just to use SQLite (the only connector actually verified
+# end-to-end in this environment -- see connectors/__init__.py's docstring)
+# would bloat the base install for the common case. Each connector's own
+# __init__ already gives this exact same "pip install X" message if you try
+# to use it without the driver present -- this file just lets you install
+# everything up front instead of hitting that one at a time.
+#
+# NOT listed here because they don't need anything from this file: "gsc",
+# "ga4", and "pagespeed" (see gsc_connector.py / ga4_connector.py /
+# pagespeed_connector.py) run on cryptography + stdlib urllib, both already
+# in requirements.txt -- nothing extra to install for those three.
+#
+# Install only what you need, e.g.:
+#   pip install -r requirements-connectors.txt        # all four
+#   pip install psycopg2-binary                        # Postgres only
+#
+# None of these have been run against a live service in this environment --
+# each is written to its vendor's documented driver API, but unverified
+# beyond that. SQLite (already in requirements.txt via the stdlib, no
+# separate driver needed) remains the only connector with real, passing
+# tests against an actual database.
+
+psycopg2-binary                        # Postgres
+snowflake-connector-python[pandas]     # Snowflake
+google-cloud-bigquery                  # BigQuery
+db-dtypes                              # BigQuery (pandas integration, per bigquery_connector.py's own install message)
+databricks-sql-connector               # Databricks

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_analytics-0-weekly-sessions-by-channel",
+  "position": {
+    "x": 20,
+    "y": 170,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsWeeklyByChannel"
+                    }
+                  },
+                  "Property": "week"
+                }
+              },
+              "queryRef": "AnalyticsWeeklyByChannel.week",
+              "nativeQueryRef": "week"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsWeeklyByChannel"
+                    }
+                  },
+                  "Property": "sessions"
+                }
+              },
+              "queryRef": "AnalyticsWeeklyByChannel.sessions",
+              "nativeQueryRef": "sessions"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsWeeklyByChannel"
+                    }
+                  },
+                  "Property": "channel_group"
+                }
+              },
+              "queryRef": "AnalyticsWeeklyByChannel.channel_group",
+              "nativeQueryRef": "channel_group"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

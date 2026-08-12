@@ -1,0 +1,51 @@
+table SeoTotals
+
+	partition SeoTotals-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"total_urls_crawled", "indexable_pct", "avg_load_time_ms", "impressions_28d", "clicks_28d", "ctr_pct", "avg_position"}, {{190, np.float64(84.2), np.float64(1660.0), 130834, 6307, 4.82, np.float64(34.5)}})
+			in
+				Source
+
+	column total_urls_crawled
+		dataType: int64
+		sourceColumn: total_urls_crawled
+		summarizeBy: sum
+		formatString: #,##0
+
+	column indexable_pct
+		dataType: double
+		sourceColumn: indexable_pct
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column avg_load_time_ms
+		dataType: double
+		sourceColumn: avg_load_time_ms
+		summarizeBy: average
+		formatString: #,##0.00
+
+	column impressions_28d
+		dataType: int64
+		sourceColumn: impressions_28d
+		summarizeBy: sum
+		formatString: #,##0
+
+	column clicks_28d
+		dataType: int64
+		sourceColumn: clicks_28d
+		summarizeBy: sum
+		formatString: #,##0
+
+	column ctr_pct
+		dataType: double
+		sourceColumn: ctr_pct
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column avg_position
+		dataType: double
+		sourceColumn: avg_position
+		summarizeBy: average
+		formatString: #,##0.00

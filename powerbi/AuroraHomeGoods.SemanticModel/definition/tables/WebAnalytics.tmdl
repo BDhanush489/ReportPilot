@@ -1,0 +1,76 @@
+table WebAnalytics
+
+	partition WebAnalytics-Partition = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(SampleDataFolder & "web_analytics.csv"), [Delimiter=",", Columns=10, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,{{"date", type date}, {"channel_group", type text}, {"device_category", type text}, {"sessions", Int64.Type}, {"new_users", Int64.Type}, {"engaged_sessions", Int64.Type}, {"conversions", Int64.Type}, {"revenue_usd", type number}, {"bounce_rate", type number}, {"avg_session_duration_sec", Int64.Type}})
+			in
+				Typed
+
+	measure 'Total Sessions' = SUM(WebAnalytics[sessions])
+		formatString: #,##0
+
+	measure 'New Users' = SUM(WebAnalytics[new_users])
+		formatString: #,##0
+
+	measure 'Total Conversions' = SUM(WebAnalytics[conversions])
+		formatString: #,##0
+
+	measure 'Web Revenue' = SUM(WebAnalytics[revenue_usd])
+		formatString: $#,##0
+
+	measure 'Conversion Rate' = DIVIDE([Total Conversions], [Total Sessions])
+		formatString: 0.00%
+
+	column date
+		dataType: dateTime
+		sourceColumn: date
+		summarizeBy: none
+
+	column channel_group
+		dataType: string
+		sourceColumn: channel_group
+		summarizeBy: none
+
+	column device_category
+		dataType: string
+		sourceColumn: device_category
+		summarizeBy: none
+
+	column sessions
+		dataType: int64
+		sourceColumn: sessions
+		summarizeBy: sum
+
+	column new_users
+		dataType: int64
+		sourceColumn: new_users
+		summarizeBy: sum
+
+	column engaged_sessions
+		dataType: int64
+		sourceColumn: engaged_sessions
+		summarizeBy: sum
+
+	column conversions
+		dataType: int64
+		sourceColumn: conversions
+		summarizeBy: sum
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+
+	column bounce_rate
+		dataType: double
+		sourceColumn: bounce_rate
+		summarizeBy: none
+
+	column avg_session_duration_sec
+		dataType: int64
+		sourceColumn: avg_session_duration_sec
+		summarizeBy: none

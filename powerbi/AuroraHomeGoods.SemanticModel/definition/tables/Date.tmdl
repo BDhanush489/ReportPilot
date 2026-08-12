@@ -1,0 +1,30 @@
+table Date
+
+	partition Date-Partition = calculated
+		mode: import
+		source = CALENDAR(MIN(MIN(WebAnalytics[date]), MIN(SalesDeals[close_date])), MAX(MAX(WebAnalytics[date]), MAX(SalesDeals[close_date])))
+
+	column Date
+		dataType: dateTime
+		isKey
+		sourceColumn: Date
+		summarizeBy: none
+		formatString: Long Date
+
+	column Year = YEAR([Date])
+		dataType: int64
+		summarizeBy: none
+
+	column MonthSort = YEAR([Date]) * 100 + MONTH([Date])
+		dataType: int64
+		summarizeBy: none
+		isHidden
+
+	column MonthName = FORMAT([Date], "MMM YYYY")
+		dataType: string
+		summarizeBy: none
+		sortByColumn: MonthSort
+
+	column Quarter = "Q" & FORMAT([Date], "Q")
+		dataType: string
+		summarizeBy: none

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.145.json",
+  "name": "Aurora Home Goods Theme",
+  "dataColors": [
+    "#2a78d6",
+    "#008300",
+    "#e87ba4",
+    "#eda100",
+    "#1baf7a",
+    "#eb6834",
+    "#4a3aa7",
+    "#e34948"
+  ],
+  "background": "#fcfcfb",
+  "foreground": "#0b0b0b",
+  "good": "#0ca30c",
+  "neutral": "#fab219",
+  "bad": "#d03b3b",
+  "accent": "#2a78d6",
+  "tableAccent": "#eda100"
+}

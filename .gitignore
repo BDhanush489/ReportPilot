@@ -1,0 +1,21 @@
+# Claude Code local state -- not part of the project
+.claude/
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+.next/
+out/
+
+# Env files -- real secrets live here, never committed
+.env
+.env.local
+.env.*.local
+
+# OS cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,7 @@
+relationship 9fe8f96e-8ac9-41ba-bc91-79110655d9d9
+	fromColumn: WebAnalytics.date
+	toColumn: Date.Date
+
+relationship 28d77c51-a6e4-4f7e-a9c7-3ec2b6cdd07b
+	fromColumn: SalesDeals.close_date
+	toColumn: Date.Date

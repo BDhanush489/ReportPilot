@@ -1,0 +1,44 @@
+table SalesMonthly
+
+	partition SalesMonthly-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"month", "deals_won", "deals_lost", "revenue_usd", "win_rate", "avg_deal_size"}, {{"2026-01", 95, 41, 51333.52, 0.699, 540.35}, {"2026-02", 89, 42, 43467.17, 0.679, 488.4}, {"2026-03", 77, 50, 38899.93, 0.606, 505.19}, {"2026-04", 45, 19, 21807.12, 0.703, 484.6}, {"2026-05", 52, 26, 26812.63, 0.667, 515.63}, {"2026-06", 46, 22, 20386.39, 0.676, 443.18}})
+			in
+				Source
+
+	column month
+		dataType: string
+		sourceColumn: month
+		summarizeBy: none
+
+	column deals_won
+		dataType: int64
+		sourceColumn: deals_won
+		summarizeBy: sum
+		formatString: #,##0
+
+	column deals_lost
+		dataType: int64
+		sourceColumn: deals_lost
+		summarizeBy: sum
+		formatString: #,##0
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column win_rate
+		dataType: double
+		sourceColumn: win_rate
+		summarizeBy: average
+		formatString: 0.0"%"
+
+	column avg_deal_size
+		dataType: double
+		sourceColumn: avg_deal_size
+		summarizeBy: average
+		formatString: #,##0.00

@@ -1,0 +1,60 @@
+{
+  "id": "local_service_business",
+  "version": 1,
+  "label": "Local Service Business Monthly",
+  "description": "SEO + lead-source performance for home-service and local-practice clients (HVAC, plumbing, dental, salons, ...) -- skips web analytics in favor of what actually drives booked jobs.",
+  "tone": "manager",
+  "prompt_guidance": "This client is a local service business (e.g. HVAC, plumbing, dental, home services). Frame technical SEO issues in terms of how they affect local search visibility and phone/quote-request volume, not abstract 'traffic.' When discussing lead source performance, prioritize which channels are driving BOOKED JOBS (closed-won deals), not just raw lead count -- a channel with fewer leads but a higher close rate is the one worth calling out first.",
+  "sections": [
+    {
+      "key": "seo",
+      "label": "Local Search & Site Health",
+      "charts": [
+        {
+          "caption": "Site health",
+          "builder": "seo_health_bar_chart",
+          "builder_args": ["severity_counts"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.seo.severity_counts"],
+          "shape": "dict_counts"
+        },
+        {
+          "caption": "Top technical issues",
+          "builder": "top_issues_bar_chart",
+          "builder_args": ["top_issues"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.seo.top_issues"],
+          "shape": "pairs"
+        }
+      ]
+    },
+    {
+      "key": "sales",
+      "label": "Booked Jobs",
+      "charts": [
+        {
+          "caption": "Monthly revenue & win rate",
+          "builder": "monthly_revenue_and_winrate_chart",
+          "builder_args": ["_monthly"],
+          "chart_type": "line",
+          "metric_paths": ["series.sales.monthly"],
+          "shape": "records",
+          "x_field": "month",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        },
+        {
+          "caption": "Revenue by lead source",
+          "builder": "revenue_by_lead_source_pie_chart",
+          "builder_args": ["by_lead_source"],
+          "chart_type": "pie",
+          "metric_paths": ["metrics.sales.by_lead_source"],
+          "shape": "records",
+          "x_field": "lead_source",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        }
+      ]
+    }
+  ]
+}

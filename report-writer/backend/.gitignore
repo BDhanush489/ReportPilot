@@ -1,0 +1,23 @@
+venv/
+__pycache__/
+*.pyc
+# generated/, data_contexts/, schedules/, alerts/, delivery_logs/ are now
+# vestigial -- these five stores moved into the DB (see app/store_models.py).
+# Left ignored rather than deleted outright, since old local files here
+# predate that migration and aren't read by anything anymore either way.
+generated/
+.env
+data_contexts/
+sample_data/aurora_warehouse.sqlite
+.pbip_schema_cache/
+schedules/
+alerts/
+delivery_logs/
+demo_reports/
+# reportpilot.db was the local dev SQLite DB before the app moved to
+# Postgres (DATABASE_URL); a.db/acme.db/b.db/etc. are throwaway per-client
+# warehouse files created ad hoc while testing SQL connectors -- none of
+# these are real project files.
+*.db
+*.db-wal
+*.db-shm

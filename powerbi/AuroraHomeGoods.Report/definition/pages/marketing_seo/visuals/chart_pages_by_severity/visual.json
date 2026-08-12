@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_pages_by_severity",
+  "position": {
+    "x": 20,
+    "y": 140,
+    "z": 1000,
+    "width": 400,
+    "height": 340,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEOAudit"
+                    }
+                  },
+                  "Property": "issue_severity"
+                }
+              },
+              "queryRef": "SEOAudit.issue_severity",
+              "nativeQueryRef": "issue_severity"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SEOAudit"
+                    }
+                  },
+                  "Property": "Pages Crawled"
+                }
+              },
+              "queryRef": "SEOAudit.Pages Crawled",
+              "nativeQueryRef": "Pages Crawled"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

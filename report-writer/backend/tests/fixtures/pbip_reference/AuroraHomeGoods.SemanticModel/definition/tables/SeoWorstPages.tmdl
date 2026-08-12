@@ -1,0 +1,36 @@
+table SeoWorstPages
+
+	partition SeoWorstPages-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"url", "issue_severity", "issues", "impressions_28d", "organic_sessions_28d"}, {{"https://aurorahome.example.com/blog/linen-bedding-bundle-101", "warning", "title_length;meta_description_length;images_missing_alt", 2893, 127}, {"https://aurorahome.example.com/collections/linen-bedding-bundle-150", "warning", "meta_description_length", 2242, 178}, {"https://aurorahome.example.com/collections/wool-area-rug-74", "warning", "title_length", 2125, 176}, {"https://aurorahome.example.com/collections/woven-wall-hanging-200", "warning", "title_length;broken_internal_links", 2249, 124}, {"https://aurorahome.example.com/blog/rattan-basket-set-202", "warning", "h1_count;broken_internal_links", 2192, 104}, {"https://aurorahome.example.com/blog/ceramic-dinnerware-set-145", "warning", "title_length", 2191, 100}, {"https://aurorahome.example.com/collections/stoneware-mug-set-54", "warning", "meta_description_length;slow_load_time", 1820, 139}, {"https://aurorahome.example.com/collections/oak-side-table-144", "warning", "not_mobile_friendly;broken_internal_links", 2000, 96}})
+			in
+				Source
+
+	column url
+		dataType: string
+		sourceColumn: url
+		summarizeBy: none
+
+	column issue_severity
+		dataType: string
+		sourceColumn: issue_severity
+		summarizeBy: none
+
+	column issues
+		dataType: string
+		sourceColumn: issues
+		summarizeBy: none
+
+	column impressions_28d
+		dataType: int64
+		sourceColumn: impressions_28d
+		summarizeBy: sum
+		formatString: #,##0
+
+	column organic_sessions_28d
+		dataType: int64
+		sourceColumn: organic_sessions_28d
+		summarizeBy: sum
+		formatString: #,##0

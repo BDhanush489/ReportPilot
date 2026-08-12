@@ -1,0 +1,132 @@
+table SEOAudit
+
+	partition SEOAudit-Partition = m
+		mode: import
+		source =
+			let
+				Source = Csv.Document(File.Contents(SampleDataFolder & "seo_audit.csv"), [Delimiter=",", Columns=20, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				Typed = Table.TransformColumnTypes(Promoted,{{"url", type text}, {"path", type text}, {"status_code", Int64.Type}, {"is_indexable", type logical}, {"load_time_ms", Int64.Type}, {"title_length", Int64.Type}, {"meta_description_length", Int64.Type}, {"h1_count", Int64.Type}, {"word_count", Int64.Type}, {"has_canonical", type logical}, {"mobile_friendly", type logical}, {"broken_internal_links", Int64.Type}, {"images_missing_alt", Int64.Type}, {"impressions_28d", Int64.Type}, {"clicks_28d", Int64.Type}, {"ctr", type number}, {"avg_position", type number}, {"organic_sessions_28d", Int64.Type}, {"issue_severity", type text}, {"issues", type text}})
+			in
+				Typed
+
+	measure 'Pages Crawled' = COUNTROWS(SEOAudit)
+		formatString: #,##0
+
+	measure 'Critical Issues' = CALCULATE(COUNTROWS(SEOAudit), SEOAudit[issue_severity] = "critical")
+		formatString: #,##0
+
+	measure 'Indexable Pages' = CALCULATE(COUNTROWS(SEOAudit), SEOAudit[is_indexable] = TRUE)
+		formatString: #,##0
+
+	measure 'Indexable %' = DIVIDE([Indexable Pages], [Pages Crawled])
+		formatString: 0.0%
+
+	measure 'Total Impressions' = SUM(SEOAudit[impressions_28d])
+		formatString: #,##0
+
+	measure 'Total Clicks' = SUM(SEOAudit[clicks_28d])
+		formatString: #,##0
+
+	measure 'Search CTR' = DIVIDE([Total Clicks], [Total Impressions])
+		formatString: 0.00%
+
+	column url
+		dataType: string
+		sourceColumn: url
+		summarizeBy: none
+
+	column path
+		dataType: string
+		sourceColumn: path
+		summarizeBy: none
+
+	column status_code
+		dataType: int64
+		sourceColumn: status_code
+		summarizeBy: none
+
+	column is_indexable
+		dataType: boolean
+		sourceColumn: is_indexable
+		summarizeBy: none
+
+	column load_time_ms
+		dataType: int64
+		sourceColumn: load_time_ms
+		summarizeBy: average
+
+	column title_length
+		dataType: int64
+		sourceColumn: title_length
+		summarizeBy: none
+
+	column meta_description_length
+		dataType: int64
+		sourceColumn: meta_description_length
+		summarizeBy: none
+
+	column h1_count
+		dataType: int64
+		sourceColumn: h1_count
+		summarizeBy: none
+
+	column word_count
+		dataType: int64
+		sourceColumn: word_count
+		summarizeBy: average
+
+	column has_canonical
+		dataType: boolean
+		sourceColumn: has_canonical
+		summarizeBy: none
+
+	column mobile_friendly
+		dataType: boolean
+		sourceColumn: mobile_friendly
+		summarizeBy: none
+
+	column broken_internal_links
+		dataType: int64
+		sourceColumn: broken_internal_links
+		summarizeBy: sum
+
+	column images_missing_alt
+		dataType: int64
+		sourceColumn: images_missing_alt
+		summarizeBy: sum
+
+	column impressions_28d
+		dataType: int64
+		sourceColumn: impressions_28d
+		summarizeBy: sum
+
+	column clicks_28d
+		dataType: int64
+		sourceColumn: clicks_28d
+		summarizeBy: sum
+
+	column ctr
+		dataType: double
+		sourceColumn: ctr
+		summarizeBy: none
+
+	column avg_position
+		dataType: double
+		sourceColumn: avg_position
+		summarizeBy: average
+
+	column organic_sessions_28d
+		dataType: int64
+		sourceColumn: organic_sessions_28d
+		summarizeBy: sum
+
+	column issue_severity
+		dataType: string
+		sourceColumn: issue_severity
+		summarizeBy: none
+
+	column issues
+		dataType: string
+		sourceColumn: issues
+		summarizeBy: none

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "kpi_win_rate",
+  "position": {
+    "x": 950,
+    "y": 20,
+    "z": 1000,
+    "width": 300,
+    "height": 100,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesDeals"
+                    }
+                  },
+                  "Property": "Win Rate"
+                }
+              },
+              "queryRef": "SalesDeals.Win Rate",
+              "nativeQueryRef": "Win Rate"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

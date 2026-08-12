@@ -1,0 +1,29 @@
+table SalesByRep
+
+	partition SalesByRep-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"sales_rep", "revenue_usd", "deals_won"}, {{"Priya Nair", 50484.79, 96}, {"Morgan Diaz", 40318.23, 73}, {"Jordan Lee", 39218.29, 75}, {"Taylor Brooks", 39020.76, 87}, {"Sam Osei", 33664.69, 73}})
+			in
+				Source
+
+	measure 'Sales Total Revenue' = SUM(SalesByRep[revenue_usd])
+		formatString: $#,##0.00
+
+	column sales_rep
+		dataType: string
+		sourceColumn: sales_rep
+		summarizeBy: none
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column deals_won
+		dataType: int64
+		sourceColumn: deals_won
+		summarizeBy: sum
+		formatString: #,##0

@@ -1,0 +1,93 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "table_SeoWorstPages",
+  "position": {
+    "x": 20,
+    "y": 1018,
+    "z": 1000,
+    "width": 860,
+    "height": 220,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoWorstPages"
+                    }
+                  },
+                  "Property": "url"
+                }
+              },
+              "queryRef": "SeoWorstPages.url",
+              "nativeQueryRef": "url"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoWorstPages"
+                    }
+                  },
+                  "Property": "issue_severity"
+                }
+              },
+              "queryRef": "SeoWorstPages.issue_severity",
+              "nativeQueryRef": "issue_severity"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoWorstPages"
+                    }
+                  },
+                  "Property": "issues"
+                }
+              },
+              "queryRef": "SeoWorstPages.issues",
+              "nativeQueryRef": "issues"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoWorstPages"
+                    }
+                  },
+                  "Property": "impressions_28d"
+                }
+              },
+              "queryRef": "SeoWorstPages.impressions_28d",
+              "nativeQueryRef": "impressions_28d"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoWorstPages"
+                    }
+                  },
+                  "Property": "organic_sessions_28d"
+                }
+              },
+              "queryRef": "SeoWorstPages.organic_sessions_28d",
+              "nativeQueryRef": "organic_sessions_28d"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

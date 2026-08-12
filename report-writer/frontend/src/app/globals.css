@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+/* Design tokens mirror app/theme.py's palette exactly (INK_PRIMARY,
+   INK_SECONDARY, INK_MUTED, GRIDLINE, BASELINE, SURFACE, STATUS) so the
+   generator UI, the PDF, and the standalone dashboard never drift into
+   three different "grays." */
+:root {
+  --background: #f7f6f2;
+  --surface: #fcfcfb;
+  --ink-primary: #0b0b0b;
+  --ink-secondary: #52514e;
+  --ink-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-critical: #d03b3b;
+  --brand: #2a78d6;
+  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.04), 0 6px 20px -8px rgba(11, 11, 11, 0.10);
+  --shadow-card-hover: 0 2px 4px rgba(11, 11, 11, 0.05), 0 12px 28px -10px rgba(11, 11, 11, 0.14);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--ink-primary);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-muted: var(--ink-muted);
+  --color-gridline: var(--gridline);
+  --color-baseline: var(--baseline);
+  --color-status-good: var(--status-good);
+  --color-status-warning: var(--status-warning);
+  --color-status-critical: var(--status-critical);
+  --color-brand: var(--brand);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+}
+
+body {
+  background: var(--background);
+  color: var(--ink-primary);
+  font-family: var(--font-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Numeric columns (KPI figures, percentages) line up on their digits
+   instead of jittering as they update. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

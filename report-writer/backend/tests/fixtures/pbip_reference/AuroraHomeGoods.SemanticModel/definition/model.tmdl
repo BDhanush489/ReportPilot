@@ -1,0 +1,19 @@
+model Model
+	culture: en-US
+
+ref table AnalyticsTotals
+ref table AnalyticsByChannel
+ref table AnalyticsByDevice
+ref table AnalyticsWeeklyByChannel
+ref table AnalyticsWeeklyTotals
+ref table SeoTotals
+ref table SeoSeverityCounts
+ref table SeoTopIssues
+ref table SalesTotals
+ref table SalesByRep
+ref table SalesByLeadSource
+ref table SalesByProduct
+ref table SalesMonthly
+ref table SeoWorstPages
+ref table SeoOpportunityPages
+ref table QaSummary

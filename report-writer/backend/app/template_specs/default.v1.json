@@ -1,0 +1,139 @@
+{
+  "id": "default",
+  "version": 1,
+  "label": "Full Monthly Report",
+  "description": "Deep, multi-section report covering every uploaded data source in full detail -- every chart, every KPI.",
+  "tone": "manager",
+  "sections": [
+    {
+      "key": "analytics",
+      "label": "Web Analytics",
+      "charts": [
+        {
+          "caption": "Weekly sessions by channel",
+          "builder": "weekly_sessions_by_channel_chart",
+          "builder_args": ["_weekly", "_top_channels"],
+          "chart_type": "line",
+          "metric_paths": ["series.analytics.weekly_by_channel"],
+          "shape": "records",
+          "x_field": "week",
+          "y_field": "sessions"
+        },
+        {
+          "caption": "Weekly revenue",
+          "builder": "revenue_trend_chart",
+          "builder_args": ["_weekly_totals"],
+          "chart_type": "line",
+          "metric_paths": ["series.analytics.weekly_totals"],
+          "shape": "records",
+          "x_field": "week",
+          "y_field": "revenue_usd",
+          "requires_columns": ["revenue_usd"]
+        },
+        {
+          "caption": "Revenue by channel",
+          "builder": "channel_revenue_bar_chart",
+          "builder_args": ["by_channel"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.analytics.by_channel"],
+          "shape": "records",
+          "x_field": "channel",
+          "y_field": "revenue_usd",
+          "requires_columns": ["revenue_usd"]
+        },
+        {
+          "caption": "Conversion rate by channel",
+          "builder": "conversion_rate_by_channel_chart",
+          "builder_args": ["by_channel"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.analytics.by_channel"],
+          "shape": "records",
+          "x_field": "channel",
+          "y_field": "conversion_rate"
+        },
+        {
+          "caption": "Sessions by device",
+          "builder": "device_split_pie_chart",
+          "builder_args": ["by_device"],
+          "chart_type": "pie",
+          "metric_paths": ["metrics.analytics.by_device"],
+          "shape": "records",
+          "x_field": "device_category",
+          "y_field": "sessions"
+        }
+      ]
+    },
+    {
+      "key": "seo",
+      "label": "SEO & Site Health",
+      "charts": [
+        {
+          "caption": "Site health",
+          "builder": "seo_health_bar_chart",
+          "builder_args": ["severity_counts"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.seo.severity_counts"],
+          "shape": "dict_counts"
+        },
+        {
+          "caption": "Top technical issues",
+          "builder": "top_issues_bar_chart",
+          "builder_args": ["top_issues"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.seo.top_issues"],
+          "shape": "pairs"
+        }
+      ]
+    },
+    {
+      "key": "sales",
+      "label": "Sales Performance",
+      "charts": [
+        {
+          "caption": "Monthly revenue & win rate",
+          "builder": "monthly_revenue_and_winrate_chart",
+          "builder_args": ["_monthly"],
+          "chart_type": "line",
+          "metric_paths": ["series.sales.monthly"],
+          "shape": "records",
+          "x_field": "month",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        },
+        {
+          "caption": "Revenue by sales rep",
+          "builder": "revenue_by_rep_chart",
+          "builder_args": ["by_rep"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.sales.by_rep"],
+          "shape": "records",
+          "x_field": "sales_rep",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        },
+        {
+          "caption": "Revenue by lead source",
+          "builder": "revenue_by_lead_source_pie_chart",
+          "builder_args": ["by_lead_source"],
+          "chart_type": "pie",
+          "metric_paths": ["metrics.sales.by_lead_source"],
+          "shape": "records",
+          "x_field": "lead_source",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        },
+        {
+          "caption": "Revenue by product",
+          "builder": "revenue_by_product_bar_chart",
+          "builder_args": ["by_product"],
+          "chart_type": "bar",
+          "metric_paths": ["metrics.sales.by_product"],
+          "shape": "records",
+          "x_field": "product",
+          "y_field": "revenue_usd",
+          "requires_columns": ["amount_usd"]
+        }
+      ]
+    }
+  ]
+}

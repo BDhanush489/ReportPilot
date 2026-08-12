@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "kpi_sales_win_rate_pct",
+  "position": {
+    "x": 300,
+    "y": 60,
+    "z": 1000,
+    "width": 260,
+    "height": 90,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SalesTotals"
+                    }
+                  },
+                  "Property": "win_rate_pct"
+                }
+              },
+              "queryRef": "SalesTotals.win_rate_pct",
+              "nativeQueryRef": "win_rate_pct"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Win Rate'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

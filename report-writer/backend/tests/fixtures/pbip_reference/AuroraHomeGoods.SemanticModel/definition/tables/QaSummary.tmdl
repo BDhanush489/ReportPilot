@@ -1,0 +1,19 @@
+table QaSummary
+
+	partition QaSummary-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"badge", "methodology"}, {{"PASS-WITH-WARNINGS", "Every figure in this workbook is generated deterministically by ReportPilot's metrics engine before this export exists -- Power BI never computes, estimates, or recomputes a number. Every DAX measure here is a plain SUM over a pre-aggregated column, verified against the same canonical report object the PDF and dashboard read from at export time."}})
+			in
+				Source
+
+	column badge
+		dataType: string
+		sourceColumn: badge
+		summarizeBy: none
+
+	column methodology
+		dataType: string
+		sourceColumn: methodology
+		summarizeBy: none

@@ -1,0 +1,11 @@
+{
+  "version": "2.0",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/platform/platformProperties.json",
+  "config": {
+    "logicalId": "7b0ffb07-d6ae-5a34-acb2-85ad933ee895"
+  },
+  "metadata": {
+    "type": "Report",
+    "displayName": "AuroraHomeGoods"
+  }
+}

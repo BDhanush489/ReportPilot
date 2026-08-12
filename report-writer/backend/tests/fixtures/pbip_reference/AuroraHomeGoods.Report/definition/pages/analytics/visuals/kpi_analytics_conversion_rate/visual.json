@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "kpi_analytics_conversion_rate",
+  "position": {
+    "x": 580,
+    "y": 60,
+    "z": 1000,
+    "width": 260,
+    "height": 90,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsTotals"
+                    }
+                  },
+                  "Property": "conversion_rate"
+                }
+              },
+              "queryRef": "AnalyticsTotals.conversion_rate",
+              "nativeQueryRef": "conversion_rate"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Conversion Rate'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

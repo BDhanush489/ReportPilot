@@ -1,0 +1,26 @@
+table SalesByProduct
+
+	partition SalesByProduct-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"product", "revenue_usd", "deals_won"}, {{"Starter Set", 47152.16, 92}, {"Bedroom Refresh Kit", 44968.98, 85}, {"Outdoor Collection", 39854.659999999996, 84}, {"Living Room Bundle", 35627.96, 67}, {"Dining Essentials", 35103.0, 76}})
+			in
+				Source
+
+	column product
+		dataType: string
+		sourceColumn: product
+		summarizeBy: none
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00
+
+	column deals_won
+		dataType: int64
+		sourceColumn: deals_won
+		summarizeBy: sum
+		formatString: #,##0

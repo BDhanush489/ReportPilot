@@ -1,0 +1,23 @@
+table SeoSeverityCounts
+
+	partition SeoSeverityCounts-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"severity", "count"}, {{"warning", 150}, {"good", 31}, {"critical", 9}})
+			in
+				Source
+
+	measure 'Total Pages Crawled' = SUM(SeoSeverityCounts[count])
+		formatString: #,##0
+
+	column severity
+		dataType: string
+		sourceColumn: severity
+		summarizeBy: none
+
+	column count
+		dataType: int64
+		sourceColumn: count
+		summarizeBy: sum
+		formatString: #,##0

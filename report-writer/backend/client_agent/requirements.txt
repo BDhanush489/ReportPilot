@@ -1,0 +1,9 @@
+# The client agent is deliberately standalone (see agent.py's module
+# docstring) -- it does not depend on the app/ package or its heavy
+# dependencies (pandas, fastapi, anthropic, xhtml2pdf). Just:
+requests
+# Credential encryption uses Windows DPAPI via ctypes (stdlib) -- no
+# extra dependency needed for that.
+
+# Build-time only, not a runtime dependency:
+pyinstaller

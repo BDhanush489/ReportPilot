@@ -1,0 +1,38 @@
+table SeoOpportunityPages
+
+	partition SeoOpportunityPages-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"url", "impressions_28d", "avg_position", "ctr", "clicks_28d"}, {{"https://aurorahome.example.com/blog/linen-bedding-bundle-101", 2893, 14.4, 0.0511, 147}, {"https://aurorahome.example.com/collections/woven-wall-hanging-200", 2249, 40.0, 0.0503, 113}, {"https://aurorahome.example.com/collections/linen-bedding-bundle-150", 2242, 12.5, 0.0878, 196}, {"https://aurorahome.example.com/blog/rattan-basket-set-202", 2192, 28.9, 0.0511, 112}, {"https://aurorahome.example.com/blog/ceramic-dinnerware-set-145", 2191, 25.1, 0.0425, 93}, {"https://aurorahome.example.com/collections/wool-area-rug-74", 2125, 63.6, 0.0869, 184}, {"https://aurorahome.example.com/collections/bamboo-cutting-board-107", 2075, 64.2, 0.0281, 58}, {"https://aurorahome.example.com/collections/oak-side-table-144", 2000, 45.2, 0.0449, 89}})
+			in
+				Source
+
+	column url
+		dataType: string
+		sourceColumn: url
+		summarizeBy: none
+
+	column impressions_28d
+		dataType: int64
+		sourceColumn: impressions_28d
+		summarizeBy: sum
+		formatString: #,##0
+
+	column avg_position
+		dataType: double
+		sourceColumn: avg_position
+		summarizeBy: average
+		formatString: #,##0.00
+
+	column ctr
+		dataType: double
+		sourceColumn: ctr
+		summarizeBy: sum
+		formatString: #,##0.00
+
+	column clicks_28d
+		dataType: int64
+		sourceColumn: clicks_28d
+		summarizeBy: sum
+		formatString: #,##0

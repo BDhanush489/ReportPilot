@@ -1,0 +1,20 @@
+table SeoTopIssues
+
+	partition SeoTopIssues-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"issue", "count"}, {{"title_length", 68}, {"meta_description_length", 63}, {"broken_internal_links", 41}, {"images_missing_alt", 31}, {"noindex_or_blocked", 30}, {"slow_load_time", 30}, {"h1_count", 20}, {"not_mobile_friendly", 11}})
+			in
+				Source
+
+	column issue
+		dataType: string
+		sourceColumn: issue
+		summarizeBy: none
+
+	column count
+		dataType: int64
+		sourceColumn: count
+		summarizeBy: sum
+		formatString: #,##0

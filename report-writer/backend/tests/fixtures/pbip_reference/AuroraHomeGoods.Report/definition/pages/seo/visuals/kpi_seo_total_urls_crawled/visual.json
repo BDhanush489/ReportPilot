@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "kpi_seo_total_urls_crawled",
+  "position": {
+    "x": 20,
+    "y": 60,
+    "z": 1000,
+    "width": 260,
+    "height": 90,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "SeoTotals"
+                    }
+                  },
+                  "Property": "total_urls_crawled"
+                }
+              },
+              "queryRef": "SeoTotals.total_urls_crawled",
+              "nativeQueryRef": "total_urls_crawled"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pages Crawled'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

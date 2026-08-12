@@ -1,0 +1,32 @@
+table AnalyticsByDevice
+
+	partition AnalyticsByDevice-Partition = m
+		mode: import
+		source =
+			let
+				Source = #table({"device_category", "sessions", "conversions", "revenue_usd"}, {{"desktop", 123589, 3107, 244192.81}, {"mobile", 152390, 3860, 305009.09}, {"tablet", 25111, 625, 47755.83}})
+			in
+				Source
+
+	column device_category
+		dataType: string
+		sourceColumn: device_category
+		summarizeBy: none
+
+	column sessions
+		dataType: int64
+		sourceColumn: sessions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column conversions
+		dataType: int64
+		sourceColumn: conversions
+		summarizeBy: sum
+		formatString: #,##0
+
+	column revenue_usd
+		dataType: double
+		sourceColumn: revenue_usd
+		summarizeBy: sum
+		formatString: $#,##0.00

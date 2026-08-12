@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_analytics-4-sessions-by-device",
+  "position": {
+    "x": 20,
+    "y": 1810,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "pieChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsByDevice"
+                    }
+                  },
+                  "Property": "device_category"
+                }
+              },
+              "queryRef": "AnalyticsByDevice.device_category",
+              "nativeQueryRef": "device_category"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsByDevice"
+                    }
+                  },
+                  "Property": "sessions"
+                }
+              },
+              "queryRef": "AnalyticsByDevice.sessions",
+              "nativeQueryRef": "sessions"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

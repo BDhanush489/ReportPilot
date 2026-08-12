@@ -1,0 +1,55 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "chart_analytics-3-conversion-rate-by-channel",
+  "position": {
+    "x": 20,
+    "y": 1400,
+    "z": 1000,
+    "width": 860,
+    "height": 320,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsByChannel"
+                    }
+                  },
+                  "Property": "channel"
+                }
+              },
+              "queryRef": "AnalyticsByChannel.channel",
+              "nativeQueryRef": "channel"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AnalyticsByChannel"
+                    }
+                  },
+                  "Property": "conversion_rate"
+                }
+              },
+              "queryRef": "AnalyticsByChannel.conversion_rate",
+              "nativeQueryRef": "conversion_rate"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
