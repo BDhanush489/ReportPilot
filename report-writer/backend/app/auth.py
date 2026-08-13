@@ -336,7 +336,7 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/api/auth/me")
-def me(session: AuthSession = Depends(get_current_auth_session), db: Session = Depends(get_db)):
+def me(request: Request, session: AuthSession = Depends(get_current_auth_session), db: Session = Depends(get_db)):
     from . import plans as plans_mod
 
     user = db.get(User, session.user_id)
@@ -350,6 +350,17 @@ def me(session: AuthSession = Depends(get_current_auth_session), db: Session = D
         "tenant": {"id": tenant.id, "name": tenant.name, "slug": tenant.slug, "plan": tenant.plan},
         "role": membership.role if membership else None,
         "plan": plans_mod.get_plan(tenant.plan).label,
+        # Handed back in the body (not just left in the rp_csrf cookie) because
+        # frontend/backend sit on two unrelated free-tier domains (*.vercel.app +
+        # *.onrender.com) -- document.cookie on the frontend's page can only ever
+        # see cookies belonging to the frontend's OWN origin, never one the
+        # backend set. Reading it here (a CORS response body, allowed only for
+        # settings.frontend_origin_list per the CORS config) is what lets
+        # src/lib/csrf.ts obtain the value at all in that topology. See
+        # csrf.ts's own comment for why this doesn't weaken the double-submit
+        # protection: a forged cross-site request still can't read this
+        # response (CORS blocks it) any more than it could read the cookie.
+        "csrf_token": request.cookies.get(settings.csrf_cookie_name),
     }
 
 

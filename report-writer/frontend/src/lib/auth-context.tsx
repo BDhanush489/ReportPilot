@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { withCsrf } from "@/lib/csrf";
+import { setCsrfToken, withCsrf } from "@/lib/csrf";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -39,11 +39,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const res = await fetch(`${API_BASE}/api/auth/me`, { credentials: "include" });
       if (res.ok) {
-        const data: { user: AuthUser; tenant: AuthTenant; role: string | null; plan: string } = await res.json();
+        const data: { user: AuthUser; tenant: AuthTenant; role: string | null; plan: string; csrf_token: string | null } = await res.json();
         setUser(data.user);
         setTenant(data.tenant);
         setRole(data.role);
         setPlanLabel(data.plan);
+        setCsrfToken(data.csrf_token);
       } else {
         // Not logged in (or session expired) -- the correct, expected
         // steady state for an anonymous visitor, not an error to surface.
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setTenant(null);
         setRole(null);
         setPlanLabel(null);
+        setCsrfToken(null);
       }
     } catch {
       // Backend unreachable -- treat the same as "not logged in" rather
@@ -59,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setTenant(null);
       setRole(null);
       setPlanLabel(null);
+      setCsrfToken(null);
     } finally {
       setLoading(false);
     }
@@ -72,6 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setTenant(null);
       setRole(null);
       setPlanLabel(null);
+      setCsrfToken(null);
     }
   }, []);
 
