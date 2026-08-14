@@ -637,6 +637,7 @@ def get_report(report_id: str, tenant_id: str = Depends(auth.get_tenant_id)):
             "ai_generated": cached["report"].get("_ai_generated", False),
             "ai_provider": cached["report"].get("_ai_provider"),
             "ai_error": cached["report"].get("_ai_error"),
+            "ai_limit_reached": cached["report"].get("_ai_limit_reached", False),
             "qa": cached.get("report_object").qa if cached.get("report_object") else None,
         }
     meta = _load_meta(tenant_id, report_id)
@@ -649,6 +650,7 @@ def get_report(report_id: str, tenant_id: str = Depends(auth.get_tenant_id)):
         "ai_generated": meta.get("ai_generated", False),
         "ai_provider": meta.get("ai_provider"),
         "ai_error": meta.get("ai_error"),
+        "ai_limit_reached": meta.get("ai_limit_reached", False),
         "qa": obj.qa if obj else None,
     }
 

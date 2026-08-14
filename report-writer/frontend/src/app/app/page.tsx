@@ -70,6 +70,10 @@ type GenerateResponse = {
   ai_generated: boolean;
   ai_provider: string | null;
   ai_error: string | null;
+  // True when a Claude call was skipped specifically because the shared
+  // daily usage cap was hit (as opposed to no key being configured at
+  // all, or a live call failing) — see app/ai_usage.py.
+  ai_limit_reached?: boolean;
   // Absent (undefined/null) for a report generated before the canonical
   // report object shipped on the backend — treat that as "no badge to
   // show," not as a failure.
@@ -708,7 +712,7 @@ export default function Home() {
 }
 
 function ReportPreview({ data, accentColor, primaryColor }: { data: GenerateResponse; accentColor: string; primaryColor: string }) {
-  const { report, report_id, ai_generated, ai_provider, ai_error, qa } = data;
+  const { report, report_id, ai_generated, ai_provider, ai_error, ai_limit_reached, qa } = data;
   const pdfUrl = `${API_BASE}/api/report/${report_id}/pdf`;
   const pbipUrl = `${API_BASE}/api/report/${report_id}/export/pbip`;
   const badgeStyle = qa?.badge ? QA_BADGE_STYLE[qa.badge] : null;
@@ -757,6 +761,12 @@ function ReportPreview({ data, accentColor, primaryColor }: { data: GenerateResp
         <div className="mb-4 rounded-lg border-l-4 px-3.5 py-2.5 text-xs leading-relaxed" style={{ borderColor: "#0ca30c", backgroundColor: "#eaf7ea", color: "#1c4f1c" }}>
           Written by {ai_provider || "an AI model"}. Every number above still comes straight from the
           computed metrics — the model only writes the prose around them.
+        </div>
+      ) : ai_limit_reached ? (
+        <div className="mb-4 rounded-lg border-l-4 px-3.5 py-2.5 text-xs leading-relaxed" style={{ borderColor: "#fab219", backgroundColor: "#fdf3e3", color: "#6b4d0a" }}>
+          You&rsquo;re out of free AI-narrative usage for today (freemium plan) — this report uses a
+          deterministic template instead. Every number above is identical to what AI would have shown;
+          only the prose is more generic. Your usage resets tomorrow.
         </div>
       ) : (
         <div className="mb-4 rounded-lg border-l-4 px-3.5 py-2.5 text-xs leading-relaxed" style={{ borderColor: "#fab219", backgroundColor: "#fdf3e3", color: "#6b4d0a" }}>

@@ -9,10 +9,13 @@ never asked to compute or invent a figure. This is what makes it safe to hand
 the output straight to an agency's client without a human fact-check pass.
 
 Provider selection, in order, all automatic:
-  1. Claude (claude-opus-4-8) if ANTHROPIC_API_KEY is set.
+  1. Claude (claude-haiku-4-5) if ANTHROPIC_API_KEY is set AND today's
+     global usage cap isn't exhausted (see app/ai_usage.py — a shared
+     budget-protection cap across every tenant, not per-tenant).
   2. A local Ollama model (OLLAMA_MODEL, default llama3.2:3b) if an Ollama
      server is reachable at OLLAMA_BASE_URL — free, no API key, runs on this
-     machine. Weaker prose than Claude, but a real model, not a template.
+     machine, and NOT subject to the cap above (nothing to protect, it's
+     free). Weaker prose than Claude, but a real model, not a template.
   3. A deterministic template narrative — always available, zero setup.
 
 Whichever tier actually produces the report, the numbers are identical:
@@ -213,9 +216,8 @@ def _generate_via_anthropic(metrics_payload: dict, branding: dict, sections_requ
                              tone: str, prompt_guidance: str = "") -> dict:
     client = _client()
     response = client.messages.create(
-        model="claude-opus-4-8",
+        model="claude-haiku-4-5-20251001",
         max_tokens=8000,
-        thinking={"type": "adaptive"},
         output_config={"effort": "high", "format": {"type": "json_schema", "schema": REPORT_SCHEMA}},
         system=_system_prompt_for(tone, prompt_guidance),
         messages=[{"role": "user",
@@ -225,7 +227,7 @@ def _generate_via_anthropic(metrics_payload: dict, branding: dict, sections_requ
     report = json.loads(text_block)
     _validate_report_shape(report, sections_requested)
     report["_ai_generated"] = True
-    report["_ai_provider"] = "Claude Opus 4.8"
+    report["_ai_provider"] = "Claude Haiku 4.5"
     return report
 
 
@@ -257,21 +259,31 @@ def _generate_via_ollama(metrics_payload: dict, branding: dict, sections_request
 
 
 def generate_report(metrics_payload: dict, branding: dict, sections_requested: list[str],
-                     tone: str = "manager", prompt_guidance: str = "") -> dict:
+                     tone: str = "manager", prompt_guidance: str = "", claude_allowed: bool = True) -> dict:
     """tone: "executive" | "manager" | "specialist" (see template_specs.py, T1)
     -- register only. Every figure still comes from metrics_payload untouched
     regardless of tone; see test_template_specs.py's identical-figures test.
     prompt_guidance: P — an industry pack's extra system-prompt instruction,
     empty for general-purpose templates. Only reaches a live model (Claude/
-    Ollama); the deterministic fallback has no prompt to guide."""
+    Ollama); the deterministic fallback has no prompt to guide.
+    claude_allowed: resolved by the caller (report_builder.py) via
+    app/ai_usage.py's global daily cap BEFORE this function is ever called —
+    this module stays DB-free/pure on purpose (see its own module docstring
+    and existing test suite, which calls this directly with no DB fixture).
+    Defaults True so every existing call site/test is unaffected unless it
+    explicitly opts in to the cap."""
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     errors: list[str] = []
+    limit_reached = False
 
     if api_key:
-        try:
-            return _generate_via_anthropic(metrics_payload, branding, sections_requested, tone, prompt_guidance)
-        except Exception as exc:  # noqa: BLE001 - demo-grade: never hard-fail report generation
-            errors.append(f"Claude: {exc}")
+        if claude_allowed:
+            try:
+                return _generate_via_anthropic(metrics_payload, branding, sections_requested, tone, prompt_guidance)
+            except Exception as exc:  # noqa: BLE001 - demo-grade: never hard-fail report generation
+                errors.append(f"Claude: {exc}")
+        else:
+            limit_reached = True
 
     if _ollama_available():
         # small local models don't reliably pass _validate_report_shape on the
@@ -287,6 +299,8 @@ def generate_report(metrics_payload: dict, branding: dict, sections_requested: l
     fallback = _fallback_report(metrics_payload, branding, sections_requested, tone)
     if errors:
         fallback["_ai_error"] = "; ".join(errors)
+    if limit_reached:
+        fallback["_ai_limit_reached"] = True
     return fallback
 
 

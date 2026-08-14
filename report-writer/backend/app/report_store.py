@@ -46,6 +46,7 @@ def persist_report(tenant_id: str, report_id: str, result: dict, branding: dict)
         "ai_generated": result["report"].get("_ai_generated", False),
         "ai_provider": result["report"].get("_ai_provider"),
         "ai_error": result["report"].get("_ai_error"),
+        "ai_limit_reached": result["report"].get("_ai_limit_reached", False),
     }
     qa_input = {
         "metrics": result["metrics"],

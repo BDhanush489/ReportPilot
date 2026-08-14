@@ -13,6 +13,7 @@ from __future__ import annotations
 import base64
 import copy
 import json
+import os
 import uuid
 from datetime import date
 from io import BytesIO
@@ -20,7 +21,7 @@ from io import BytesIO
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from xhtml2pdf import pisa
 
-from . import charts, cleaning, metrics as metrics_mod, parsers, qa, template_specs, theme
+from . import ai_usage, charts, cleaning, metrics as metrics_mod, parsers, qa, template_specs, theme
 from .agent import generate_report
 from .chart_annotation import detect_notable_point
 from .chart_intelligence import choose_chart_type
@@ -444,8 +445,13 @@ def _finish_report(metrics_payload: dict, period_label: str | None,
     series_payload = _build_series_payload(metrics_payload)
 
     stage(STAGES[1])
+    # Only consult (and spend from) the global daily cap when a key is even
+    # configured -- avoids an unnecessary DB write on every report in any
+    # deployment that has no ANTHROPIC_API_KEY at all (agent.py's own `if
+    # api_key` gate would make claude_allowed moot there anyway).
+    claude_allowed = ai_usage.try_consume() if os.environ.get("ANTHROPIC_API_KEY") else True
     report = generate_report(clean_payload, branding, sections_requested, tone=spec.tone,
-                              prompt_guidance=spec.prompt_guidance)
+                              prompt_guidance=spec.prompt_guidance, claude_allowed=claude_allowed)
 
     stage(STAGES[2])
     # Computed independently of the LLM/template narrative path, so these

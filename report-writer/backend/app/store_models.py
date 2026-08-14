@@ -111,6 +111,18 @@ class AlertFiredLedger(Base):
     fired: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
+class AiUsageCounter(Base):
+    """One row per UTC calendar day -- a GLOBAL cap on Claude narrative
+    calls, shared across every tenant (see app/ai_usage.py). Deliberately
+    NOT tenant-scoped: a per-tenant cap resets the moment someone signs up
+    with a fresh Google account, so it can't actually bound total API
+    spend the way this table does."""
+    __tablename__ = "ai_usage_counters"
+
+    date: Mapped[str] = mapped_column(String(10), primary_key=True)
+    count: Mapped[int] = mapped_column(default=0)
+
+
 class DeliveryLogEntry(Base):
     """Replaces delivery.py's DELIVERY_LOGS_DIR/{tenant_id}/{report_id}.jsonl
     -- genuinely append-only (many attempts can share a (tenant_id,

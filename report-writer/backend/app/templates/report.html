@@ -164,7 +164,12 @@
   {% set badge_class = "qa-badge-pass" if qa.badge == "PASS" else ("qa-badge-warn" if qa.badge == "PASS-WITH-WARNINGS" else "qa-badge-fail") %}
   <div class="qa-badge {{ badge_class }}">QA: {{ qa.badge }}</div>
   {% endif %}
-  {% if not report._ai_generated %}
+  {% if not report._ai_generated and report._ai_limit_reached %}
+  <div class="draft-flag">
+    Draft narrative — today's free AI-narrative usage is used up, so this report uses a deterministic
+    template instead. Numbers are unaffected; usage resets tomorrow.
+  </div>
+  {% elif not report._ai_generated %}
   <div class="draft-flag">
     Draft narrative — this preview was generated without an AI model connected.
     Set an ANTHROPIC_API_KEY to enable AI-authored analysis for this report.
