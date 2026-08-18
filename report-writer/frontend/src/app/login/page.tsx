@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-const MARKETING_URL = process.env.NEXT_PUBLIC_MARKETING_URL || "http://localhost:3001";
 
 // A real top-level navigation, not a fetch: Google redirects back to the
 // BACKEND's /api/auth/google/callback (that's what's registered in Google
@@ -44,7 +43,7 @@ export default function LoginPage() {
           <GoogleIcon />
           Continue with Google
         </a>
-        <a href={`${MARKETING_URL}/#pricing`} className="mt-5 block text-xs font-medium text-ink-muted transition-colors hover:text-ink">
+        <a href="/#pricing" className="mt-5 block text-xs font-medium text-ink-muted transition-colors hover:text-ink">
           View pricing
         </a>
       </div>
