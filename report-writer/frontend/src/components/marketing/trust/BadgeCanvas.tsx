@@ -56,7 +56,7 @@ function Ridges({ t }: { t: React.RefObject<number> }) {
         <mesh key={i} rotation={[0, 0, item.angle]}>
           <boxGeometry args={[0.1, 0.045, 0.045]} />
           <meshStandardMaterial
-            color="#4d74e8"
+            color="#ddc38c"
             metalness={0.6}
             roughness={0.3}
             transparent
@@ -93,11 +93,11 @@ function Rings({ t }: { t: React.RefObject<number> }) {
     <>
       <mesh ref={outer} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.3, 0.05, 16, 64]} />
-        <meshStandardMaterial color="#4d74e8" metalness={0.7} roughness={0.25} transparent opacity={0} />
+        <meshStandardMaterial color="#ddc38c" metalness={0.7} roughness={0.25} transparent opacity={0} />
       </mesh>
       <mesh ref={inner} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.02, 0.035, 16, 64]} />
-        <meshStandardMaterial color="#a8bdf5" metalness={0.5} roughness={0.3} transparent opacity={0} />
+        <meshStandardMaterial color="#f2dfb2" metalness={0.5} roughness={0.3} transparent opacity={0} />
       </mesh>
     </>
   );
@@ -121,20 +121,20 @@ function Seal({ t }: { t: React.RefObject<number> }) {
       <mesh ref={disc} rotation={[Math.PI / 2, 0, 0]} scale={0}>
         <cylinderGeometry args={[0.92, 0.92, 0.1, 48]} />
         <meshStandardMaterial
-          color="#2b58d6"
+          color="#c9a468"
           metalness={0.55}
           roughness={0.32}
-          emissive="#17399e"
+          emissive="#8a6b3b"
           emissiveIntensity={0.25}
         />
       </mesh>
       <mesh ref={checkA} position={[-0.16, -0.02, 0.09]} rotation={[0, 0, Math.PI / 4]} scale={0}>
         <boxGeometry args={[0.42, 0.1, 0.05]} />
-        <meshStandardMaterial color="#f2f1ea" roughness={0.4} />
+        <meshStandardMaterial color="#0b0c0e" roughness={0.4} />
       </mesh>
       <mesh ref={checkB} position={[0.14, 0.12, 0.09]} rotation={[0, 0, -Math.PI / 4]} scale={0}>
         <boxGeometry args={[0.62, 0.1, 0.05]} />
-        <meshStandardMaterial color="#f2f1ea" roughness={0.4} />
+        <meshStandardMaterial color="#0b0c0e" roughness={0.4} />
       </mesh>
     </group>
   );
@@ -175,8 +175,8 @@ export function BadgeCanvas({ armed }: { armed: boolean }) {
   return (
     <Canvas dpr={[1, 1.75]} camera={{ position: [0, 0, 4.4], fov: 34 }} gl={{ antialias: true, alpha: true }}>
       <ambientLight intensity={0.65} color="#8f97a8" />
-      <directionalLight position={[3, 4, 5]} intensity={1.2} color="#eef1f8" />
-      <pointLight position={[-3, -1, 2]} intensity={0.6} color="#1e4fd1" />
+      <directionalLight position={[3, 4, 5]} intensity={1.2} color="#fff3df" />
+      <pointLight position={[-3, -1, 2]} intensity={0.6} color="#b8985b" />
       <Suspense fallback={null}>
         <Assembly armed={armed} />
       </Suspense>

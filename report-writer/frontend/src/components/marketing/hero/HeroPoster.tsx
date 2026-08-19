@@ -2,7 +2,7 @@
  * Static stand-in for the 3D data-landscape: used for prefers-reduced-motion,
  * low-power/mobile devices, and as the Suspense/loading fallback while the
  * WebGL bundle streams in. Echoes the same visual language (bar terrain +
- * verify-blue glow) so the experience never feels like a placeholder box.
+ * warm gold glow) so the experience never feels like a placeholder box.
  */
 export function HeroPoster({ animated = false }: { animated?: boolean }) {
   const bars = [38, 58, 44, 80, 52, 70, 46, 92, 58, 40, 74, 50, 64, 36];
@@ -13,7 +13,7 @@ export function HeroPoster({ animated = false }: { animated?: boolean }) {
         className={`absolute inset-0 ${animated ? "animate-pulse" : ""}`}
         style={{
           background:
-            "radial-gradient(55% 45% at 50% 38%, rgba(30,79,209,0.28), transparent 70%)",
+            "radial-gradient(55% 45% at 50% 38%, rgba(184,152,91,0.22), transparent 70%)",
           animationDuration: "7s",
         }}
       />
@@ -26,8 +26,8 @@ export function HeroPoster({ animated = false }: { animated?: boolean }) {
               height: `${h}%`,
               background:
                 i % 3 === 0
-                  ? "linear-gradient(180deg, var(--color-verify-light), rgba(30,79,209,0.15))"
-                  : "linear-gradient(180deg, rgba(242,241,234,0.28), rgba(242,241,234,0.03))",
+                  ? "linear-gradient(180deg, var(--color-gold-light), rgba(184,152,91,0.15))"
+                  : "linear-gradient(180deg, rgba(247,244,236,0.28), rgba(247,244,236,0.03))",
             }}
           />
         ))}

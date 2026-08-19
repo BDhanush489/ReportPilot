@@ -30,7 +30,7 @@ const ITEMS = [
 
 export function DeliverablesShowcase() {
   return (
-    <section id="deliverables" className="relative bg-paper py-28 md:py-36">
+    <section id="deliverables" className="relative bg-canvas py-28 md:py-36">
       <Container>
         <SectionHeading
           tone="light"
@@ -51,13 +51,13 @@ export function DeliverablesShowcase() {
             >
               <div
                 aria-hidden="true"
-                className="aspect-4/3 rounded-[3px] border border-paper-line bg-white p-3"
+                className="aspect-4/3 rounded-2xl border border-canvas-line bg-white/40 p-3"
               >
                 <Mockup />
               </div>
               <div>
-                <h3 className="font-mkt-display text-lg text-paper-text">{label}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-paper-muted">
+                <h3 className="font-display text-lg text-mkt-ink">{label}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-on-canvas-muted">
                   {body}
                 </p>
               </div>

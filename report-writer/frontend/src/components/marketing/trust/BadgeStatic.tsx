@@ -8,13 +8,13 @@ export function BadgeStatic() {
       viewBox="0 0 240 240"
       className="h-full w-full max-h-[360px] max-w-[360px]"
       role="img"
-      aria-label="ReportPilot verified badge: a locked seal representing a machine-verified report"
+      aria-label="ReportPilot verified badge: a locked gold seal representing a machine-verified report"
     >
       <defs>
         <radialGradient id="seal-glow" cx="50%" cy="42%" r="65%">
-          <stop offset="0%" stopColor="#a8bdf5" />
-          <stop offset="55%" stopColor="#2b58d6" />
-          <stop offset="100%" stopColor="#17399e" />
+          <stop offset="0%" stopColor="#f2dfb2" />
+          <stop offset="55%" stopColor="#b8985b" />
+          <stop offset="100%" stopColor="#8a6b3b" />
         </radialGradient>
       </defs>
 
@@ -31,7 +31,7 @@ export function BadgeStatic() {
             y1={y1}
             x2={x2}
             y2={y2}
-            stroke="#4d74e8"
+            stroke="#ddc38c"
             strokeWidth={2}
             strokeOpacity={0.55}
           />
@@ -44,7 +44,7 @@ export function BadgeStatic() {
         cy="120"
         r="96"
         fill="none"
-        stroke="#12151a"
+        stroke="#0b0c0e"
         strokeOpacity={0.25}
         strokeWidth={1.5}
       />
@@ -53,7 +53,7 @@ export function BadgeStatic() {
         cy="120"
         r="78"
         fill="none"
-        stroke="#12151a"
+        stroke="#0b0c0e"
         strokeOpacity={0.18}
         strokeWidth={1}
       />
@@ -61,7 +61,7 @@ export function BadgeStatic() {
       <path
         d="M92 122 L113 143 L150 100"
         fill="none"
-        stroke="#f2f1ea"
+        stroke="#0b0c0e"
         strokeWidth={9}
         strokeLinecap="round"
         strokeLinejoin="round"

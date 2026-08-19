@@ -33,7 +33,7 @@ export function Footer() {
       <Container>
         <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <span className="font-mkt-display text-lg italic text-canvas">ReportPilot</span>
+            <span className="font-display text-lg text-canvas">ReportPilot</span>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-on-mkt-ink-muted">
               Client-ready reports and dashboards, every number machine-verified
               before it ships.

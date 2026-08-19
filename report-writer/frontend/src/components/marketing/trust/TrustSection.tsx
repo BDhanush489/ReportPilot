@@ -35,10 +35,10 @@ export function TrustSection() {
             className="flex flex-col gap-7"
           >
             <Eyebrow>The trust mechanism</Eyebrow>
-            <h2 className="font-mkt-display max-w-xl text-3xl leading-[1.12] tracking-tight text-canvas md:text-5xl">
+            <h2 className="font-display max-w-xl text-3xl leading-[1.12] tracking-tight text-canvas md:text-5xl">
               The AI writes the words.
               <br />
-              <span className="italic text-verify-light">The math writes the numbers.</span>
+              <span className="text-gold">The math writes the numbers.</span>
             </h2>
             <p className="max-w-lg text-base leading-relaxed text-on-mkt-ink-muted md:text-lg">
               Every ReportPilot output ships with a QA badge, because those two
@@ -61,10 +61,10 @@ export function TrustSection() {
                 >
                   <span
                     aria-hidden
-                    className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-verify"
+                    className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-gold"
                   />
                   <div>
-                    <dt className="font-mkt-display text-lg text-canvas">
+                    <dt className="font-display text-lg text-canvas">
                       {pillar.title}
                     </dt>
                     <dd className="mt-1.5 text-sm leading-relaxed text-on-mkt-ink-muted">

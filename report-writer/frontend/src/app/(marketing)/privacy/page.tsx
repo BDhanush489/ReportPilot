@@ -19,7 +19,7 @@ export default function PrivacyPage() {
           <Container>
             <div className="flex max-w-2xl flex-col gap-7">
               <Eyebrow>Privacy Policy</Eyebrow>
-              <h1 className="font-mkt-display text-3xl leading-[1.12] tracking-tight text-canvas md:text-5xl">
+              <h1 className="font-display text-3xl leading-[1.12] tracking-tight text-canvas md:text-5xl">
                 We haven&rsquo;t finalized this yet — and we&rsquo;d rather
                 say that than post something we don&rsquo;t mean.
               </h1>
@@ -34,7 +34,7 @@ export default function PrivacyPage() {
                 If you&rsquo;re evaluating ReportPilot and need to understand
                 exactly what happens to your data — client files, connector
                 credentials, report content — before you connect anything,{" "}
-                <a href={CONTACT_HREF} className="text-canvas underline decoration-mkt-ink-line underline-offset-4 hover:text-verify-light">
+                <a href={CONTACT_HREF} className="text-canvas underline decoration-mkt-ink-line underline-offset-4 hover:text-gold">
                   ask us directly
                 </a>
                 . We&rsquo;d rather answer specifically than have you guess

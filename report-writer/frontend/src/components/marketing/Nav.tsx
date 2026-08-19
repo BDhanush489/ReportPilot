@@ -25,16 +25,17 @@ export function Nav() {
     <motion.header
       className="fixed inset-x-0 top-0 z-50 transition-colors duration-500 ease-(--ease-luxury)"
       style={{
-        backgroundColor: solid ? "var(--color-mkt-ink)" : "transparent",
+        backgroundColor: solid ? "rgba(11,12,14,0.82)" : "transparent",
+        backdropFilter: solid ? "blur(12px)" : "none",
         borderBottom: solid
-          ? "1px solid var(--color-mkt-ink-line)"
+          ? "1px solid var(--color-ink-line)"
           : "1px solid transparent",
       }}
     >
       <Container className="flex h-18 items-center justify-between py-4">
         <a
           href="#top"
-          className="font-mkt-display text-lg italic tracking-tight text-canvas"
+          className="font-display text-lg tracking-tight text-canvas"
         >
           ReportPilot
         </a>
