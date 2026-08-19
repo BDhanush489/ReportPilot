@@ -23,7 +23,7 @@ type Particle = {
   endX: number;
   endY: number;
   radius: number;
-  gold: boolean;
+  accent: boolean;
 };
 
 function buildParticles(rand: () => number): Particle[] {
@@ -44,7 +44,7 @@ function buildParticles(rand: () => number): Particle[] {
         endX,
         endY,
         radius: 1.4 + rand() * 1.6,
-        gold: barIndex % 3 === 0 || rand() > 0.72,
+        accent: barIndex % 3 === 0 || rand() > 0.72,
       });
     }
   });
@@ -106,9 +106,9 @@ export function CoalesceCanvas() {
         const alpha = 0.35 + progress * 0.65;
         ctx.beginPath();
         ctx.arc(x, y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.gold
-          ? `rgba(221,195,140,${alpha})`
-          : `rgba(247,244,236,${alpha * 0.6})`;
+        ctx.fillStyle = p.accent
+          ? `rgba(30,79,209,${alpha})`
+          : `rgba(20,23,27,${alpha * 0.4})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);

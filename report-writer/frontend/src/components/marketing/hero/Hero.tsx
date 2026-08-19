@@ -21,7 +21,7 @@ export function Hero() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(11,12,14,0.35) 0%, rgba(11,12,14,0.15) 30%, rgba(11,12,14,0.55) 78%, rgba(11,12,14,0.92) 100%)",
+            "linear-gradient(180deg, rgba(18,21,26,0.35) 0%, rgba(18,21,26,0.15) 30%, rgba(18,21,26,0.55) 78%, rgba(18,21,26,0.94) 100%)",
         }}
       />
 
@@ -32,24 +32,18 @@ export function Hero() {
           transition={{ duration: 0.7, ease: EASE }}
           className="mb-7"
         >
-          <Badge>
-            <span
-              className="h-1.5 w-1.5 rounded-full bg-gold"
-              aria-hidden="true"
-            />
-            Every number machine-verified before it ships
-          </Badge>
+          <Badge>Every number machine-verified before it ships</Badge>
         </motion.div>
 
         <motion.h1
           initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE, delay: 0.08 }}
-          className="font-display max-w-3xl text-[2.6rem] leading-[1.05] tracking-tight text-canvas sm:text-6xl md:text-7xl"
+          className="font-mkt-display max-w-3xl text-[2.6rem] leading-[1.05] tracking-tight text-canvas sm:text-6xl md:text-7xl"
         >
           Client-ready reports,
           <br />
-          <span className="text-gold">not client-checked ones.</span>
+          <span className="italic text-verify-light">not client-checked ones.</span>
         </motion.h1>
 
         <motion.p

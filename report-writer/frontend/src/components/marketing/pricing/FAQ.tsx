@@ -37,11 +37,11 @@ export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative bg-canvas-soft py-28 md:py-32">
+    <section id="faq" className="relative bg-paper-raised py-28 md:py-32">
       <div className="mx-auto w-full max-w-205 px-6 md:px-10">
         <SectionHeading tone="light" eyebrow="FAQ" title="Questions worth asking." />
 
-        <div className="mt-12 divide-y divide-canvas-line border-t border-b border-canvas-line">
+        <div className="mt-12 divide-y divide-paper-line border-t border-b border-paper-line">
           {FAQS.map((item, i) => {
             const isOpen = open === i;
             return (
@@ -51,11 +51,11 @@ export function FAQ() {
                   aria-expanded={isOpen}
                   className="flex w-full items-center justify-between gap-6 py-5 text-left"
                 >
-                  <span className="font-display text-lg text-mkt-ink">{item.q}</span>
+                  <span className="font-mkt-display text-lg text-paper-text">{item.q}</span>
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.3, ease: EASE }}
-                    className="flex-none text-2xl leading-none text-gold-dark"
+                    className="flex-none text-2xl leading-none text-verify"
                     aria-hidden="true"
                   >
                     +
@@ -70,7 +70,7 @@ export function FAQ() {
                       transition={{ duration: 0.35, ease: EASE }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-5 pr-10 text-sm leading-relaxed text-on-canvas-muted">
+                      <p className="pb-5 pr-10 text-sm leading-relaxed text-paper-muted">
                         {item.a}
                       </p>
                     </motion.div>

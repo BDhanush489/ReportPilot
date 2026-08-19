@@ -27,9 +27,10 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative bg-mkt-ink pb-28 pt-4 md:pb-36">
+    <section id="how-it-works" className="relative bg-paper pb-28 pt-24 md:pb-36 md:pt-32">
       <Container>
         <SectionHeading
+          tone="light"
           eyebrow="How it works"
           title="Raw data in. A verified report out."
           description="Three steps, no spreadsheet gymnastics in between."
@@ -39,7 +40,7 @@ export function HowItWorks() {
           <CoalesceCanvas />
         </div>
 
-        <div className="mt-4 grid gap-8 border-t border-mkt-ink-line pt-12 md:grid-cols-3 md:gap-10">
+        <div className="mt-4 grid gap-8 border-t border-paper-line pt-12 md:grid-cols-3 md:gap-10">
           {STEPS.map((step, i) => (
             <motion.div
               key={step.n}
@@ -49,11 +50,11 @@ export function HowItWorks() {
               transition={{ duration: 0.6, ease: EASE, delay: 0.1 * i }}
               className="flex flex-col gap-3"
             >
-              <span className="font-display text-sm text-gold">{step.n}</span>
-              <h3 className="font-display text-xl text-canvas md:text-2xl">
+              <span className="font-mkt-mono text-sm text-verify">{step.n}</span>
+              <h3 className="font-mkt-display text-xl text-paper-text md:text-2xl">
                 {step.title}
               </h3>
-              <p className="text-sm leading-relaxed text-on-mkt-ink-muted md:text-base">
+              <p className="text-sm leading-relaxed text-paper-muted md:text-base">
                 {step.body}
               </p>
             </motion.div>

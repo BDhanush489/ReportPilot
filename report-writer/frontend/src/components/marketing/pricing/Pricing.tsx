@@ -61,7 +61,7 @@ const TIERS = [
 
 export function Pricing() {
   return (
-    <section id="pricing" className="relative bg-canvas py-28 md:py-36">
+    <section id="pricing" className="relative bg-paper py-28 md:py-36">
       <Container>
         <SectionHeading
           tone="light"
@@ -79,25 +79,25 @@ export function Pricing() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.08 * i }}
-              className={`flex flex-col gap-6 rounded-2xl border p-8 ${
+              className={`flex flex-col gap-6 rounded-[3px] border p-8 ${
                 tier.highlighted
-                  ? "border-gold bg-mkt-ink shadow-[0_30px_60px_-30px_rgba(11,12,14,0.4)]"
-                  : "border-canvas-line bg-canvas-soft"
+                  ? "border-verify bg-mkt-ink shadow-[0_30px_60px_-30px_rgba(20,23,27,0.4)]"
+                  : "border-paper-line bg-paper-raised"
               }`}
             >
               {tier.highlighted && (
-                <span className="w-fit rounded-full bg-gold px-3 py-1 text-xs font-medium text-mkt-ink">
+                <span className="w-fit rounded-[2px] bg-verify px-3 py-1 font-mkt-mono text-xs text-canvas">
                   Most popular
                 </span>
               )}
               <div>
                 <h3
-                  className={`font-display text-2xl ${tier.highlighted ? "text-canvas" : "text-mkt-ink"}`}
+                  className={`font-mkt-display text-2xl ${tier.highlighted ? "text-canvas" : "text-paper-text"}`}
                 >
                   {tier.name}
                 </h3>
                 <p
-                  className={`mt-1.5 text-sm ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-on-canvas-muted"}`}
+                  className={`mt-1.5 text-sm ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-paper-muted"}`}
                 >
                   {tier.tagline}
                 </p>
@@ -105,13 +105,13 @@ export function Pricing() {
 
               <div className="flex items-baseline gap-1">
                 <span
-                  className={`font-display text-4xl tracking-tight ${tier.highlighted ? "text-canvas" : "text-mkt-ink"}`}
+                  className={`font-mkt-mono text-4xl tracking-tight tabular-nums ${tier.highlighted ? "text-canvas" : "text-paper-text"}`}
                 >
                   {tier.price}
                 </span>
                 {tier.period && (
                   <span
-                    className={`text-sm ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-on-canvas-muted"}`}
+                    className={`text-sm ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-paper-muted"}`}
                   >
                     {tier.period}
                   </span>
@@ -121,22 +121,13 @@ export function Pricing() {
               <ul className="flex flex-1 flex-col gap-3">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2.5">
-                    <svg
-                      viewBox="0 0 20 20"
-                      className={`mt-0.5 h-4 w-4 flex-none ${tier.highlighted ? "text-gold" : "text-gold-dark"}`}
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M4 10.5l3.5 3.5L16 5.5"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
+                    <span className="mkt-verify-mark mt-0.5" aria-hidden="true">
+                      <svg viewBox="0 0 12 12" className="h-[0.65em] w-[0.65em]" fill="none">
+                        <path d="M2.5 6.2 5 8.7 9.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
                     <span
-                      className={`text-sm leading-relaxed ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-on-canvas-muted"}`}
+                      className={`text-sm leading-relaxed ${tier.highlighted ? "text-on-mkt-ink-muted" : "text-paper-muted"}`}
                     >
                       {feature}
                     </span>

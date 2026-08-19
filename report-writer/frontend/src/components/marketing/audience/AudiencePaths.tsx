@@ -56,7 +56,7 @@ export function AudiencePaths() {
   const path = PATHS[active];
 
   return (
-    <section id="audiences" className="relative bg-canvas py-28 md:py-36">
+    <section id="audiences" className="relative bg-paper py-28 md:py-36">
       <Container>
         <SectionHeading
           tone="light"
@@ -74,10 +74,10 @@ export function AudiencePaths() {
               aria-selected={active === i}
               aria-controls={`panel-${p.id}`}
               onClick={() => setActive(i)}
-              className={`rounded-full border px-5 py-2.5 text-sm font-medium transition-colors duration-300 ease-(--ease-luxury) ${
+              className={`rounded-[3px] border px-5 py-2.5 text-sm font-medium transition-colors duration-300 ease-(--ease-luxury) ${
                 active === i
-                  ? "border-gold bg-gold text-mkt-ink"
-                  : "border-canvas-line text-on-canvas-muted hover:border-gold-dark/50 hover:text-mkt-ink"
+                  ? "border-verify bg-verify text-canvas"
+                  : "border-paper-line text-paper-muted hover:border-verify/50 hover:text-paper-text"
               }`}
             >
               {p.tab}
@@ -85,7 +85,7 @@ export function AudiencePaths() {
           ))}
         </div>
 
-        <div className="relative mt-10 min-h-90 overflow-hidden rounded-2xl border border-canvas-line bg-canvas-soft">
+        <div className="relative mt-10 min-h-90 overflow-hidden rounded-[3px] border border-paper-line bg-paper-raised">
           <AnimatePresence mode="wait">
             <motion.div
               key={path.id}
@@ -100,13 +100,13 @@ export function AudiencePaths() {
               className="grid gap-10 p-8 md:grid-cols-2 md:p-12"
             >
               <div className="flex flex-col gap-5">
-                <span className="text-xs font-medium uppercase tracking-[0.18em] text-gold-dark">
+                <span className="font-mkt-mono text-xs uppercase tracking-[0.1em] text-verify">
                   {path.meta}
                 </span>
-                <h3 className="font-display text-3xl leading-tight tracking-tight text-mkt-ink md:text-4xl">
+                <h3 className="font-mkt-display text-3xl leading-tight tracking-tight text-paper-text md:text-4xl">
                   {path.headline}
                 </h3>
-                <p className="text-base leading-relaxed text-on-canvas-muted">
+                <p className="text-base leading-relaxed text-paper-muted">
                   {path.body}
                 </p>
                 <Button href={APP_LOGIN_URL} tone="light" variant="secondary" className="mt-2 self-start">
@@ -114,25 +114,15 @@ export function AudiencePaths() {
                 </Button>
               </div>
 
-              <ul className="flex flex-col justify-center gap-4 border-t border-canvas-line pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
+              <ul className="flex flex-col justify-center gap-4 border-t border-paper-line pt-6 md:border-t-0 md:border-l md:pl-10 md:pt-0">
                 {path.points.map((point) => (
                   <li key={point} className="flex items-start gap-3">
-                    <svg
-                      viewBox="0 0 20 20"
-                      className="mt-0.5 h-5 w-5 flex-none text-gold-dark"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.4" />
-                      <path
-                        d="M6 10.5l2.5 2.5L14 7.5"
-                        stroke="currentColor"
-                        strokeWidth="1.6"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span className="text-sm leading-relaxed text-mkt-ink/85">{point}</span>
+                    <span className="mkt-verify-mark mt-0.5" aria-hidden="true">
+                      <svg viewBox="0 0 12 12" className="h-[0.65em] w-[0.65em]" fill="none">
+                        <path d="M2.5 6.2 5 8.7 9.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <span className="text-sm leading-relaxed text-paper-text/85">{point}</span>
                   </li>
                 ))}
               </ul>

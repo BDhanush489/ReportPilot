@@ -34,7 +34,7 @@ function Terrain() {
     const mesh = meshRef.current;
     if (!mesh) return;
     const colorLow = new THREE.Color("#22242b");
-    const colorHigh = new THREE.Color("#ddc38c");
+    const colorHigh = new THREE.Color("#4d74e8");
     let i = 0;
     for (let xi = 0; xi < GRID_X; xi++) {
       for (let zi = 0; zi < GRID_Z; zi++) {
@@ -81,7 +81,7 @@ function GlassPanel({
       <mesh>
         <planeGeometry args={[1.7, 1.05]} />
         <meshPhysicalMaterial
-          color="#f7f4ec"
+          color="#f2f1ea"
           transparent
           opacity={0.07}
           roughness={0.2}
@@ -91,14 +91,14 @@ function GlassPanel({
       </mesh>
       <mesh>
         <planeGeometry args={[1.7, 1.05]} />
-        <meshBasicMaterial color="#ddc38c" wireframe transparent opacity={0.22} />
+        <meshBasicMaterial color="#4d74e8" wireframe transparent opacity={0.22} />
       </mesh>
       {bars.map((h, i) => (
         <mesh key={i} position={[-0.62 + i * 0.31, -0.42 + h / 2, 0.02]}>
           <boxGeometry args={[0.17, h, 0.02]} />
           <meshStandardMaterial
-            color="#ddc38c"
-            emissive="#8a6b3b"
+            color="#4d74e8"
+            emissive="#17399e"
             emissiveIntensity={0.35}
             roughness={0.3}
           />
@@ -131,11 +131,11 @@ export function DataLandscapeCanvas() {
       camera={{ position: [0, 3.3, 7.4], fov: 32 }}
       gl={{ antialias: true, alpha: true }}
     >
-      <color attach="background" args={["#0b0c0e"]} />
-      <fog attach="fog" args={["#0b0c0e", 8, 15]} />
+      <color attach="background" args={["#12151a"]} />
+      <fog attach="fog" args={["#12151a", 8, 15]} />
       <ambientLight intensity={0.6} color="#8f97a8" />
-      <directionalLight position={[4, 6, 3]} intensity={1.15} color="#fff3df" />
-      <pointLight position={[-4, 2.2, -3]} intensity={0.9} color="#b8985b" />
+      <directionalLight position={[4, 6, 3]} intensity={1.15} color="#eef1f8" />
+      <pointLight position={[-4, 2.2, -3]} intensity={0.9} color="#1e4fd1" />
       <Suspense fallback={null}>
         <Rig>
           <Terrain />

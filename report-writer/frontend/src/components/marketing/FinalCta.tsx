@@ -15,7 +15,7 @@ export function FinalCta() {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(45% 60% at 50% 100%, rgba(184,152,91,0.18), transparent 70%)",
+            "radial-gradient(45% 60% at 50% 100%, rgba(30,79,209,0.22), transparent 70%)",
         }}
       />
       <Container className="relative z-10">
@@ -26,10 +26,10 @@ export function FinalCta() {
           transition={{ duration: 0.7, ease: EASE }}
           className="flex flex-col items-center gap-8 text-center"
         >
-          <h2 className="font-display max-w-2xl text-4xl leading-[1.1] tracking-tight text-canvas md:text-6xl">
+          <h2 className="font-mkt-display max-w-2xl text-4xl leading-[1.1] tracking-tight text-canvas md:text-6xl">
             Your next report doesn&apos;t need
             <br />
-            <span className="text-gold">a second pass.</span>
+            <span className="italic text-verify-light">a second pass.</span>
           </h2>
           <p className="max-w-md text-base leading-relaxed text-on-mkt-ink-muted md:text-lg">
             Start free, generate your first verified report today, and see

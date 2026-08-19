@@ -20,13 +20,13 @@ export function SectionHeading({
     >
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <h2
-        className={`font-display max-w-2xl text-3xl leading-[1.1] tracking-tight md:text-5xl ${tone === "dark" ? "text-canvas" : "text-mkt-ink"}`}
+        className={`font-mkt-display max-w-2xl text-3xl leading-[1.1] tracking-tight md:text-5xl ${tone === "dark" ? "text-canvas" : "text-paper-text"}`}
       >
         {title}
       </h2>
       {description && (
         <p
-          className={`max-w-xl text-base leading-relaxed md:text-lg ${tone === "dark" ? "text-on-mkt-ink-muted" : "text-on-canvas-muted"}`}
+          className={`max-w-xl text-base leading-relaxed md:text-lg ${tone === "dark" ? "text-on-mkt-ink-muted" : "text-paper-muted"}`}
         >
           {description}
         </p>

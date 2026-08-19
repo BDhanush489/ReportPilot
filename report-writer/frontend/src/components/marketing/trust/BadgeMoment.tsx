@@ -46,7 +46,7 @@ export function BadgeMoment() {
         className="absolute inset-0 rounded-full"
         style={{
           background:
-            "radial-gradient(50% 50% at 50% 50%, rgba(184,152,91,0.25), transparent 70%)",
+            "radial-gradient(50% 50% at 50% 50%, rgba(30,79,209,0.3), transparent 70%)",
         }}
       />
       {useStatic ? (

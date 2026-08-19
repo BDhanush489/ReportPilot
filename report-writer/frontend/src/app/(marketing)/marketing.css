@@ -1,63 +1,78 @@
 /* ---------------------------------------------------------------------
-   Marketing-page design tokens. `ink` and `sans` are prefixed `mkt-`
-   because those exact keys collide with ../globals.css's own tokens with
-   OPPOSITE meanings (its --color-ink is near-black TEXT on a light page;
-   this --color-ink is the near-black BACKGROUND itself) -- once both
-   stylesheets compile into one Tailwind build, an unprefixed name would
-   silently let whichever loads last win everywhere. canvas/gold don't
-   collide with anything in ../globals.css, so they keep their original
-   names. Rules are scoped to .marketing-theme rather than `body`/`*`/
-   `:root` so this page's dark theme can't leak onto /app, /login, /admin,
+   Marketing-page design tokens.
+
+   Structural concept: the page is built like the product's own output --
+   a dark COVER (hero) and dark BACK COVER (final CTA + footer), with
+   PAPER-toned pages in between for the body sections. One accent
+   throughout: --color-verify, a stamp-blue standing in for the product's
+   real "every number machine-verified" QA badge, echoing (not matching)
+   the app's own brand blue (#2a78d6, ../globals.css --brand) so the two
+   halves of one product read as related, not two unrelated skins.
+
+   `ink`/`sans` are prefixed `mkt-` because those exact keys already exist
+   in ../globals.css with a DIFFERENT meaning (its --color-ink is
+   near-black TEXT on a light page; --color-mkt-ink here is the near-black
+   COVER background itself) -- once both stylesheets compile into one
+   Tailwind build, an unprefixed name would let whichever loads last win
+   everywhere. Rules are scoped to .marketing-theme rather than `body`/
+   `*`/`:root` so this theme can't leak onto /app, /login, /admin,
    /data-sources.
-   Palette: deep ink base, warm off-white canvas, one accent — aged gold.
    --------------------------------------------------------------------- */
 :root {
-  --color-mkt-ink: #0b0c0e;
-  --color-mkt-ink-soft: #16181c;
-  --color-mkt-ink-line: rgba(247, 244, 236, 0.1);
-  /* text colors, named for the background they sit ON (not their own hue) */
-  --color-on-mkt-ink-muted: rgba(247, 244, 236, 0.6);
+  /* the cover (hero, final CTA, footer) */
+  --color-mkt-ink: #12151a;
+  --color-mkt-ink-line: rgba(240, 241, 236, 0.12);
+  --color-on-mkt-ink-muted: rgba(240, 241, 236, 0.62);
+  /* near-white text set on the cover */
+  --color-canvas: #f2f1ea;
 
-  --color-canvas: #f7f4ec;
-  --color-canvas-soft: #efe9dc;
-  --color-canvas-line: rgba(11, 12, 14, 0.1);
-  --color-on-canvas-muted: rgba(11, 12, 14, 0.58);
+  /* the pages (every body section) */
+  --color-paper: #f0f1ec;
+  --color-paper-raised: #e7e9e2;
+  --color-paper-line: #d4d8d0;
+  --color-paper-text: #14171b;
+  --color-paper-muted: #575d5f;
 
-  --color-gold: #b8985b;
-  --color-gold-light: #ddc38c;
-  --color-gold-dark: #8a6b3b;
+  /* the one accent -- a verification-stamp blue */
+  --color-verify: #1e4fd1;
+  --color-verify-dark: #17399e;
+  --color-verify-tint: #e3e9fb;
+  /* same hue, tuned for contrast when used as text on the dark cover */
+  --color-verify-light: #7d9dfa;
 
   --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-luxury-in: cubic-bezier(0.7, 0, 0.84, 0);
 
-  /* --font-display is already provided globally by the root layout's own
-     Fraunces load (../layout.tsx) -- same font/config, no need for a
-     second instance. Only the body face differs from the app (Inter here
-     vs. Manrope there), so that's the one new font variable. */
-  --font-mkt-sans: var(--font-mkt-inter);
+  /* Display face is loaded locally in ../layout.tsx (Newsreader) rather
+     than reusing the app-wide --font-display (Fraunces, ../globals.css)
+     -- a deliberately different pairing for the marketing voice. --font-
+     mkt-mono carries verification codes / tabular figures, the one place
+     this page borrows the vocabulary of an actual ledger. */
+  --font-mkt-sans: var(--font-mkt-plex-sans);
 }
 
 @theme inline {
   --color-mkt-ink: var(--color-mkt-ink);
-  --color-mkt-ink-soft: var(--color-mkt-ink-soft);
   --color-mkt-ink-line: var(--color-mkt-ink-line);
   --color-on-mkt-ink-muted: var(--color-on-mkt-ink-muted);
-
   --color-canvas: var(--color-canvas);
-  --color-canvas-soft: var(--color-canvas-soft);
-  --color-canvas-line: var(--color-canvas-line);
-  --color-on-canvas-muted: var(--color-on-canvas-muted);
 
-  --color-gold: var(--color-gold);
-  --color-gold-light: var(--color-gold-light);
-  --color-gold-dark: var(--color-gold-dark);
+  --color-paper: var(--color-paper);
+  --color-paper-raised: var(--color-paper-raised);
+  --color-paper-line: var(--color-paper-line);
+  --color-paper-text: var(--color-paper-text);
+  --color-paper-muted: var(--color-paper-muted);
+
+  --color-verify: var(--color-verify);
+  --color-verify-dark: var(--color-verify-dark);
+  --color-verify-tint: var(--color-verify-tint);
+  --color-verify-light: var(--color-verify-light);
 
   --font-mkt-sans: var(--font-mkt-sans);
+  --font-mkt-display: var(--font-mkt-newsreader);
+  --font-mkt-mono: var(--font-mkt-plex-mono);
 }
 
-/* Scoped via :has() rather than a plain `html { scroll-behavior: smooth }`
-   -- Nav/Hero/FinalCta's #deliverables-style anchor links want smooth
-   scroll, but this must not affect /app, /login, /admin, /data-sources. */
 html:has(.marketing-theme) {
   scroll-behavior: smooth;
 }
@@ -75,12 +90,27 @@ html:has(.marketing-theme) {
 }
 
 .marketing-theme ::selection {
-  background: var(--color-gold);
-  color: var(--color-mkt-ink);
+  background: var(--color-verify);
+  color: var(--color-canvas);
 }
 
 .marketing-theme :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-verify);
   outline-offset: 3px;
+  border-radius: 1px;
+}
+
+/* One recurring device: a verification tick, standing in for the app's
+   real PASS/WARN/FAIL QA badge (see app/qa.py) -- used wherever the copy
+   claims something was checked, never as pure decoration. */
+.mkt-verify-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1em;
+  height: 1.1em;
   border-radius: 2px;
+  background: var(--color-verify);
+  color: var(--color-canvas);
+  flex-shrink: 0;
 }
