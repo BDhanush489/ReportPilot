@@ -69,7 +69,21 @@ app.add_middleware(
 # This is a SEPARATE, short-lived, itsdangerous-signed cookie
 # ("session" by Starlette's own default name) -- it is NOT this app's real
 # user session (that's app/auth.py's own DB-backed AuthSession/cookie).
-app.add_middleware(SessionMiddleware, secret_key=settings.oauth_state_secret_key)
+# Driven by the SAME settings as the session/CSRF cookies in app/auth.py
+# (see settings.session_cookie_samesite's docstring), not hardcoded --
+# https_only=True would break local dev (plain http://localhost:8000, no
+# TLS). In production those settings are "none"/True: frontend and backend
+# are unrelated free-tier domains, and this cookie has to survive a
+# top-level redirect round-trip through Google -- Starlette's own defaults
+# here (Lax, not Secure) are exactly what broke login on Safari/iOS, which
+# is stricter than Chrome about cookies on domains only ever visited via a
+# redirect chain.
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.oauth_state_secret_key,
+    same_site=settings.session_cookie_samesite,
+    https_only=settings.cookie_secure,
+)
 app.include_router(auth.router)
 
 # E1 -- the old blanket, all-or-nothing X-API-Key middleware is gone: every
