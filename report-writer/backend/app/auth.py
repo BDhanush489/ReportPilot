@@ -329,7 +329,14 @@ async def google_callback(request: Request, db: Session = Depends(get_db)):
         avatar_url=profile.get("picture"),
     )
     raw_token = create_session(db, user, tenant)
-    response = RedirectResponse(settings.frontend_url)
+    # /app, not settings.frontend_url's bare root -- since the marketing
+    # site merged into this same frontend, "/" is the marketing homepage
+    # now (it no longer auto-redirects to /app the way the old standalone
+    # root page.tsx used to). The marketing nav also has no concept of
+    # auth state at all, so landing on "/" after a real, successful login
+    # looks identical to being logged out -- "Sign in" is always shown
+    # there regardless.
+    response = RedirectResponse(f"{settings.frontend_url}/app")
     _set_session_cookie(response, raw_token)
     _set_csrf_cookie(response)
     return response

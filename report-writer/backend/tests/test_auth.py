@@ -218,7 +218,11 @@ def test_callback_creates_a_session_and_redirects_to_the_frontend(client, db_ses
 
     resp = client.get("/api/auth/google/callback", follow_redirects=False)
     assert resp.status_code in (302, 307)
-    assert resp.headers["location"] == auth.settings.frontend_url
+    # /app specifically, not just the frontend's bare root -- "/" is the
+    # marketing homepage now (report-writer/frontend merged it in), which
+    # has no concept of auth state at all and would show "Sign in" either
+    # way, making a successful login indistinguishable from a failed one.
+    assert resp.headers["location"] == f"{auth.settings.frontend_url}/app"
     assert auth.settings.session_cookie_name in resp.cookies
 
     user = db_session.query(User).filter_by(google_sub="g-999").one()
