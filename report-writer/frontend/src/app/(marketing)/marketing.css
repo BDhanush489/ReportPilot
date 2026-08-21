@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* ---------------------------------------------------------------------
    Marketing-page design tokens. `ink` and `sans` are prefixed `mkt-`
    because those exact keys collide with ../globals.css's own tokens with
