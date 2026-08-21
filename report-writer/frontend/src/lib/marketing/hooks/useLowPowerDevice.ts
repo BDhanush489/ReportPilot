@@ -21,7 +21,18 @@ function getSnapshot() {
 }
 
 function getServerSnapshot() {
-  return false;
+  // Default TRUE (not false) -- React uses this value for the very first
+  // client render too (to match SSR output before hydration reconciles
+  // against the real matchMedia result). Defaulting false meant every
+  // device, phones included, briefly rendered <DataLandscapeCanvas/> on
+  // that first pass -- which is enough for its dynamic import() (three.js
+  // + @react-three/fiber + drei, a heavy bundle) to have already fired
+  // over the network before the correction to the static poster landed a
+  // moment later. Defaulting true means only a device that POSITIVELY
+  // confirms it isn't low-power ever triggers that import at all; desktop
+  // pays a brief "poster, then upgrade" flash instead, which is the right
+  // trade since phones never pay for the heavy bundle now.
+  return true;
 }
 
 /**

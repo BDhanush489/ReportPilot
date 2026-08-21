@@ -17,7 +17,7 @@ export function HeroPoster({ animated = false }: { animated?: boolean }) {
           animationDuration: "7s",
         }}
       />
-      <div className="absolute inset-x-0 bottom-0 flex h-[42%] items-end justify-center gap-[2.5%] px-[10%] pb-[12%] opacity-80">
+      <div className="absolute inset-x-0 bottom-0 flex h-[30%] items-end justify-center gap-[2.5%] px-[6%] pb-[8%] opacity-60 sm:h-[42%] sm:px-[10%] sm:pb-[12%] sm:opacity-80">
         {bars.map((h, i) => (
           <div
             key={i}
