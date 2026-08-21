@@ -21,7 +21,7 @@ export function HeroPoster({ animated = false }: { animated?: boolean }) {
         {bars.map((h, i) => (
           <div
             key={i}
-            className="w-full rounded-t-[2px]"
+            className="w-full rounded-t-xs"
             style={{
               height: `${h}%`,
               background:
