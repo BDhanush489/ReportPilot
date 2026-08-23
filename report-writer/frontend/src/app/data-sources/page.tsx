@@ -286,10 +286,7 @@ export default function DataSourcesPage() {
       <header className="sticky top-0 z-10 border-b border-gridline bg-surface/90 backdrop-blur-sm">
         <div className="mx-auto max-w-4xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white shadow-sm"
-              style={{ backgroundColor: "#2a78d6", fontFamily: "var(--font-display)" }}
-            >
+            <div className="font-display flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white shadow-[0_1px_2px_rgba(11,11,11,0.08),0_4px_10px_-4px_rgba(42,120,214,0.5)]">
               R
             </div>
             <span className="font-display font-semibold tracking-tight text-ink">Data sources</span>
@@ -536,8 +533,7 @@ export default function DataSourcesPage() {
               type="button"
               onClick={handleSave}
               disabled={saving || testing}
-              className="rounded-lg px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-              style={{ backgroundColor: "#2a78d6" }}
+              className="rounded-lg bg-brand px-4 py-2.5 text-xs font-semibold text-white shadow-[0_1px_2px_rgba(11,11,11,0.08),0_4px_10px_-4px_rgba(42,120,214,0.5)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_1px_2px_rgba(11,11,11,0.10),0_8px_16px_-4px_rgba(42,120,214,0.55)] disabled:pointer-events-none disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
             >
               {saving ? "Connecting…" : "Connect & save"}
             </button>

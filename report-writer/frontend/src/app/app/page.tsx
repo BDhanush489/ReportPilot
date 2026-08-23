@@ -146,10 +146,7 @@ const INPUT_CLASS =
 function SectionHeading({ step, title }: { step: number; title: string }) {
   return (
     <div className="mb-4 flex items-center gap-2.5">
-      <span
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold tabular-nums"
-        style={{ backgroundColor: "#2a78d61a", color: "#2a78d6" }}
-      >
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/10 text-[11px] font-semibold tabular-nums text-brand">
         {step}
       </span>
       <h2 className="text-[13px] font-semibold tracking-wide text-ink-secondary uppercase">{title}</h2>
@@ -350,8 +347,7 @@ export default function Home() {
       <header className="sticky top-0 z-10 border-b border-gridline bg-surface/90 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white shadow-sm"
-              style={{ backgroundColor: "#2a78d6", fontFamily: "var(--font-display)" }}>
+            <div className="font-display flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white shadow-[0_1px_2px_rgba(11,11,11,0.08),0_4px_10px_-4px_rgba(42,120,214,0.5)]">
               R
             </div>
             <span className="font-display font-semibold tracking-tight text-ink">

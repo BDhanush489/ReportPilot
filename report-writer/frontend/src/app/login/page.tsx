@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 
@@ -24,12 +25,16 @@ export default function LoginPage() {
   /* eslint-enable react-hooks/exhaustive-deps */
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
-      <div className="w-full max-w-sm rounded-2xl border border-gridline bg-surface p-8 text-center shadow-card">
-        <div
-          className="mx-auto mb-5 flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold text-white shadow-sm"
-          style={{ backgroundColor: "#2a78d6", fontFamily: "var(--font-display)" }}
-        >
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "radial-gradient(60% 50% at 50% 30%, rgba(42,120,214,0.08), transparent 70%)",
+        }}
+      />
+      <div className="relative w-full max-w-sm rounded-2xl border border-gridline bg-surface p-8 text-center shadow-card transition-shadow duration-300 hover:shadow-card-hover">
+        <div className="font-display mx-auto mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white shadow-[0_1px_2px_rgba(11,11,11,0.08),0_4px_10px_-4px_rgba(42,120,214,0.5)]">
           R
         </div>
         <h1 className="font-display text-xl font-medium text-ink">Sign in to ReportPilot</h1>
@@ -38,14 +43,14 @@ export default function LoginPage() {
         </p>
         <a
           href={`${API_BASE}/api/auth/google/login`}
-          className="mt-6 flex w-full items-center justify-center gap-2.5 rounded-lg border border-gridline bg-white px-4 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:bg-black/2"
+          className="mt-6 flex w-full items-center justify-center gap-2.5 rounded-lg border border-gridline bg-white px-4 py-2.5 text-sm font-medium text-ink shadow-sm transition-all duration-200 hover:-translate-y-px hover:border-black/15 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           <GoogleIcon />
           Continue with Google
         </a>
-        <a href="/#pricing" className="mt-5 block text-xs font-medium text-ink-muted transition-colors hover:text-ink">
+        <Link href="/#pricing" className="mt-5 block text-xs font-medium text-ink-muted transition-colors hover:text-ink">
           View pricing
-        </a>
+        </Link>
       </div>
     </div>
   );
