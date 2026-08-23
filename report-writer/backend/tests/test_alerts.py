@@ -16,7 +16,8 @@ from datetime import date
 
 import pytest
 
-from app import alerts, data_context, delivery, scheduler
+from app import data_context
+from app.automations import alerts, delivery, scheduler
 from app.report_object import Period, ReportObject
 
 

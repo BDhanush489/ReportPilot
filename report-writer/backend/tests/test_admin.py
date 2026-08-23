@@ -12,7 +12,8 @@ undo it.
 """
 import pytest
 
-from app import auth, data_context, scheduler
+from app import auth, data_context
+from app.automations import scheduler
 from app.models import Tenant, User
 from tests.conftest import seed_tenant
 

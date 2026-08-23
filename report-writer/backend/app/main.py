@@ -34,7 +34,7 @@ async def lifespan(_app: FastAPI):
     # tune it, same env-var convention as SMTP_*/IMAP_*/SLACK_WEBHOOK_URL.
     stop_event = None
     if os.environ.get("AUTO_SCHEDULER_ENABLED", "").lower() in ("1", "true", "yes"):
-        from . import scheduler
+        from .automations import scheduler
         interval = int(os.environ.get("AUTO_SCHEDULER_INTERVAL_SECONDS", "3600"))
         deliver = os.environ.get("AUTO_SCHEDULER_DELIVER", "").lower() in ("1", "true", "yes")
         _, stop_event = scheduler.start_background_loop(interval_seconds=interval, deliver=deliver)
@@ -279,7 +279,8 @@ class CreateScheduleRequest(BaseModel):
 
 @app.post("/api/schedules")
 def create_schedule(req: CreateScheduleRequest, tenant_id: str = Depends(auth.get_tenant_id), db: Session = Depends(get_db)):
-    from . import plans, scheduler
+    from . import plans
+    from .automations import scheduler
     from .models import Tenant
 
     tenant = db.get(Tenant, tenant_id)
@@ -312,7 +313,7 @@ def create_schedule(req: CreateScheduleRequest, tenant_id: str = Depends(auth.ge
 
 @app.get("/api/schedules")
 def list_schedules(tenant_id: str = Depends(auth.get_tenant_id)):
-    from . import scheduler
+    from .automations import scheduler
     return {"schedules": [s.to_dict() for s in scheduler.list_schedules_for_tenant(tenant_id)]}
 
 
@@ -351,7 +352,7 @@ def run_schedules(as_of: str | None = None, dry_run: bool = True, deliver: bool 
     session-authenticated caller is always scoped to just their own tenant."""
     from datetime import date as date_cls
 
-    from . import scheduler
+    from .automations import scheduler
     as_of_date = date_cls.fromisoformat(as_of) if as_of else date_cls.today()
     results = scheduler.run_due_schedules(as_of_date, dry_run=dry_run, deliver=deliver, tenant_id=scope_tenant_id)
     return {"as_of": as_of_date.isoformat(), "dry_run": dry_run,
@@ -376,7 +377,7 @@ def save_alerts(req: SaveAlertConfigRequest, tenant_id: str = Depends(auth.get_t
     """B4 — per-client KPI alert thresholds. Breach detection itself runs
     inside scheduler.run_schedule (see alerts.check_alerts), reusing B1's
     period_diff deltas — this endpoint only persists which rules to check."""
-    from . import alerts as alerts_mod
+    from .automations import alerts as alerts_mod
     try:
         rules = [alerts_mod.AlertRule(**r.model_dump()) for r in req.rules]
     except ValueError as exc:
@@ -388,7 +389,7 @@ def save_alerts(req: SaveAlertConfigRequest, tenant_id: str = Depends(auth.get_t
 
 @app.get("/api/alerts/{client_id}")
 def get_alerts(client_id: str, tenant_id: str = Depends(auth.get_tenant_id)):
-    from . import alerts as alerts_mod
+    from .automations import alerts as alerts_mod
     config = alerts_mod.load_alert_config(tenant_id, client_id)
     if not config:
         return {"client_id": client_id, "rules": []}

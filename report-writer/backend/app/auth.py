@@ -505,7 +505,7 @@ def admin_demote_user(user_id: str, admin: User = Depends(require_platform_admin
 @router.get("/api/admin/tenants")
 def admin_list_tenants(_admin: User = Depends(require_platform_admin), db: Session = Depends(get_db)):
     from . import plans as plans_mod
-    from . import scheduler as scheduler_mod
+    from .automations import scheduler as scheduler_mod
 
     tenants = db.query(Tenant).order_by(Tenant.created_at).all()
     out = []
@@ -547,7 +547,7 @@ def admin_set_tenant_plan(
 
 @router.get("/api/admin/tenants/{tenant_id}/clients")
 def admin_list_clients(tenant_id: str, _admin: User = Depends(require_platform_admin), db: Session = Depends(get_db)):
-    from . import scheduler as scheduler_mod
+    from .automations import scheduler as scheduler_mod
 
     tenant = db.get(Tenant, tenant_id)
     if tenant is None:
@@ -576,7 +576,8 @@ def admin_add_client(
     enforced" a lie the moment someone checks here instead of the real
     onboarding flow. A Solo-plan tenant (can_schedule=False) therefore
     402s here exactly like it would through the real UI."""
-    from . import data_context, plans as plans_mod, scheduler as scheduler_mod
+    from . import data_context, plans as plans_mod
+    from .automations import scheduler as scheduler_mod
 
     tenant = db.get(Tenant, tenant_id)
     if tenant is None:
@@ -619,7 +620,8 @@ def admin_remove_client(
     exactly what admin_add_client created, so the tenant's active-clients
     count actually drops rather than leaving an orphaned schedule pointing
     at a data source that's still there."""
-    from . import data_context, scheduler as scheduler_mod
+    from . import data_context
+    from .automations import scheduler as scheduler_mod
 
     tenant = db.get(Tenant, tenant_id)
     if tenant is None:

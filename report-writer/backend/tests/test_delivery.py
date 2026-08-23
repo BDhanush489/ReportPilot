@@ -1,5 +1,5 @@
 """
-Tests for app/delivery.py (Track B3 — delivery).
+Tests for app/automations/delivery.py (Track B3 — delivery).
 
 The QA-gate and logging logic is tested directly and deterministically by
 injecting a fake channel (channel_impl) — the same dependency-injection
@@ -13,7 +13,7 @@ import json
 
 import pytest
 
-from app.delivery import (
+from app.automations.delivery import (
     EmailChannel,
     SlackChannel,
     deliver_report,
@@ -69,7 +69,7 @@ class FakeChannel:
 
     def send(self, to, subject, body_html, attachments):
         self.calls.append({"to": to, "subject": subject, "body_html": body_html, "attachments": attachments})
-        from app.delivery import ChannelSendResult
+        from app.automations.delivery import ChannelSendResult
         return ChannelSendResult(status=self.status, reason=self.reason)
 
 

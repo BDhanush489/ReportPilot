@@ -15,7 +15,8 @@ import io
 import pytest
 from fastapi.testclient import TestClient
 
-from app import alerts, data_context, delivery, report_store, scheduler
+from app import data_context, report_store
+from app.automations import alerts, delivery, scheduler
 from app.main import app
 from tests.conftest import seed_tenant
 

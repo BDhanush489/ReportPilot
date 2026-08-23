@@ -14,7 +14,8 @@ from datetime import date
 
 import pytest
 
-from app import data_context, delivery, report_store, scheduler
+from app import data_context, report_store
+from app.automations import delivery, scheduler
 
 ANALYTICS_ROWS = [
     ("2026-01-01", "Organic Search", "desktop", 100, 80, 5, 500.0),

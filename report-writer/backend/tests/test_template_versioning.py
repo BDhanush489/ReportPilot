@@ -17,7 +17,8 @@ from datetime import date
 
 import pytest
 
-from app import data_context, delivery, report_builder, report_store, scheduler, template_specs
+from app import data_context, report_builder, report_store, template_specs
+from app.automations import delivery, scheduler
 
 BRANDING = {"agency_name": "Test Agency", "client_name": "Aurora Home Goods",
             "primary_color": "#2a78d6", "accent_color": "#eda100"}
