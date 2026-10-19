@@ -131,16 +131,60 @@ def _normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]", "", name.lower())
 
 
+# Common warehouse/CRM names for each canonical field, tried (in order) after
+# an exact match and before the substring fallback -- what lets the no-AI path
+# map e.g. closed_on -> close_date or owner -> sales_rep instead of leaving
+# them unmapped.
+_SYNONYMS = {
+    "date": ["event_date", "report_date", "day"],
+    "channel_group": ["channel", "default_channel_group", "source_medium"],
+    "device_category": ["device", "device_type"],
+    "sessions": ["session_count", "visits"],
+    "new_users": ["new_user_count"],
+    "engaged_sessions": ["engaged_session_count"],
+    "conversions": ["goal_completions", "transactions"],
+    "revenue_usd": ["total_revenue", "revenue"],
+    "bounce_rate": ["bounce_pct", "bounces_pct"],
+    "avg_session_duration_sec": ["avg_duration_sec", "avg_session_duration"],
+    "url": ["page_url", "address", "page"],
+    "status_code": ["http_status", "status"],
+    "is_indexable": ["index_status", "indexable", "indexability"],
+    "load_time_ms": ["ttfb_ms", "response_time_ms"],
+    "impressions_28d": ["impressions"],
+    "clicks_28d": ["clicks"],
+    "avg_position": ["serp_position", "position"],
+    "organic_sessions_28d": ["organic_traffic", "organic_sessions"],
+    "issue_severity": ["severity"],
+    "issues": ["issue_notes", "issue_list"],
+    "deal_id": ["opp_id", "opportunity_id", "id"],
+    "close_date": ["closed_on", "closed_date", "close_dt"],
+    "sales_rep": ["owner", "account_owner", "rep"],
+    "product": ["sku", "product_name", "plan"],
+    "region": ["territory"],
+    "lead_source": ["source", "channel"],
+    "deal_stage": ["stage", "status"],
+    "amount_usd": ["closed_amount", "amount"],
+    "potential_amount_usd": ["pipeline_amount", "deal_value", "expected_amount"],
+    "days_to_close": ["sales_cycle_days", "sales_cycle_length"],
+}
+
+
 def _fuzzy_match_mapping(canonical_fields: list[str], columns: list[dict]) -> dict[str, str | None]:
-    """Deterministic fallback used when no AI provider is reachable — exact or
-    substring match on normalized names. Always produces a mapping, just a
-    cruder one than the LLM would; onboarding never hard-blocks on AI being down."""
+    """Deterministic fallback used when no AI provider is reachable — exact,
+    known-synonym, then substring match on normalized names. Always produces a
+    mapping, just a cruder one than the LLM would; onboarding never hard-blocks
+    on AI being down."""
     mapping: dict[str, str | None] = {}
     norm_cols = {_normalize(c["name"]): c["name"] for c in columns}
     for field in canonical_fields:
         norm_field = _normalize(field)
         if norm_field in norm_cols:
             mapping[field] = norm_cols[norm_field]
+            continue
+        synonym = next((norm_cols[_normalize(s)] for s in _SYNONYMS.get(field, [])
+                        if _normalize(s) in norm_cols), None)
+        if synonym:
+            mapping[field] = synonym
             continue
         match = next((real for norm, real in norm_cols.items()
                       if norm_field in norm or norm in norm_field), None)
