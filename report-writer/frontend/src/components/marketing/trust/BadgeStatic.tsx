@@ -1,3 +1,5 @@
+const round = (n: number) => Math.round(n * 1000) / 1000;
+
 /** Static, already-assembled seal -- used for reduced-motion and low-power
  * devices, and as the loading fallback while the WebGL bundle streams in. */
 export function BadgeStatic() {
@@ -6,7 +8,7 @@ export function BadgeStatic() {
   return (
     <svg
       viewBox="0 0 240 240"
-      className="h-full w-full max-h-[360px] max-w-[360px]"
+      className="h-full w-full max-h-90 max-w-90"
       role="img"
       aria-label="ReportPilot verified badge: a locked gold seal representing a machine-verified report"
     >
@@ -20,10 +22,12 @@ export function BadgeStatic() {
 
       {ticks.map((i) => {
         const angle = (i / ticks.length) * Math.PI * 2;
-        const x1 = 120 + Math.cos(angle) * 108;
-        const y1 = 120 + Math.sin(angle) * 108;
-        const x2 = 120 + Math.cos(angle) * 118;
-        const y2 = 120 + Math.sin(angle) * 118;
+        // Round so server (Node) and client (browser) Math.sin/cos agree --
+        // their last-digit differences otherwise cause a hydration mismatch.
+        const x1 = round(120 + Math.cos(angle) * 108);
+        const y1 = round(120 + Math.sin(angle) * 108);
+        const x2 = round(120 + Math.cos(angle) * 118);
+        const y2 = round(120 + Math.sin(angle) * 118);
         return (
           <line
             key={i}

@@ -33,17 +33,35 @@ def _select_mapped_columns(connector: Connector, table: str, column_map: dict[st
     return connector.run_query(sql)
 
 
+def _require_mapped(source_type: str, source_config: dict) -> None:
+    """Fails with a message a user can act on, instead of a bare KeyError
+    deep in metrics.py, when the one field a report can't do without was
+    never mapped (typically: no AI provider at onboarding, and the fuzzy
+    matcher couldn't pair e.g. close_date with closed_on)."""
+    from .data_context import REQUIRED_FIELDS
+    field = REQUIRED_FIELDS[source_type]
+    if not source_config["column_map"].get(field):
+        raise ValueError(
+            f"The {source_type} table {source_config['table']!r} has no column mapped to "
+            f"{field!r}, which every report needs. On the Data sources page, click "
+            f"\"Edit mapping\" for this client and pick the column that holds it."
+        )
+
+
 def load_analytics_from_sql(connector: Connector, source_config: dict) -> tuple[pd.DataFrame, list[dict]]:
+    _require_mapped("analytics", source_config)
     df = _select_mapped_columns(connector, source_config["table"], source_config["column_map"])
     return parsers.normalize_web_analytics(df)
 
 
 def load_seo_from_sql(connector: Connector, source_config: dict) -> tuple[pd.DataFrame, list[dict]]:
+    _require_mapped("seo", source_config)
     df = _select_mapped_columns(connector, source_config["table"], source_config["column_map"])
     return parsers.normalize_seo_audit(df)
 
 
 def load_sales_from_sql(connector: Connector, source_config: dict) -> tuple[pd.DataFrame, pd.DataFrame | None, list[dict]]:
+    _require_mapped("sales", source_config)
     df = _select_mapped_columns(connector, source_config["table"], source_config["column_map"])
     deals, issues = parsers.normalize_deals(df)
     return deals, None, issues

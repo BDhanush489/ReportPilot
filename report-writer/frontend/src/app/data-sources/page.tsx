@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ConfirmDialog from "@/components/ConfirmDialog";
+import MappingEditor, { type SourceMapping } from "@/components/MappingEditor";
 import { useAuth } from "@/lib/auth-context";
 import { API_BASE, errorMessage, fetchJson } from "@/lib/api";
 
@@ -199,21 +200,30 @@ export default function DataSourcesPage() {
     setSaving(true);
     try {
       const { config, table_map, kindValue } = buildConfigAndTableMap();
-      const data = await fetchJson<{ client_id: string; sources: Record<string, unknown> }>("/api/data-sources/onboard", {
+      const data = await fetchJson<{ client_id: string; sources: Record<string, SourceMapping> }>("/api/data-sources/onboard", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ client_id: clientId.trim(), kind: kindValue, config, table_map }),
       });
       const sourceKeys = Object.keys(data.sources);
-      setSaveOk(sourceKeys.length ? `Connected — mapped: ${sourceKeys.join(", ")}.` : "Connected.");
+      const incomplete = sourceKeys.filter((k) => data.sources[k].missing_required);
+      setSaveOk(
+        incomplete.length
+          ? `Connected, but ${incomplete.join(", ")} is missing a required column. Fix it in the mapping editor below.`
+          : sourceKeys.length ? `Connected — mapped: ${sourceKeys.join(", ")}.` : "Connected."
+      );
       setTestResult(null);
       await loadRows();
+      if (incomplete.length) setEditingMapping(data.client_id);
     } catch (e) {
       setFormError(errorMessage(e, "Could not save this data source."));
     } finally {
       setSaving(false);
     }
   }
+
+  // --- Column-mapping editor, open for at most one row at a time ---
+  const [editingMapping, setEditingMapping] = useState<string | null>(null);
 
   // --- Generate a real report straight from a connected source ---
   const [genState, setGenState] = useState<Record<string, GenRow>>({});
@@ -566,8 +576,10 @@ export default function DataSourcesPage() {
               <tbody>
                 {rows.map((row) => {
                   const gen = genState[row.client_id];
+                  const editing = editingMapping === row.client_id;
                   return (
-                    <tr key={row.client_id} className="border-b border-gridline last:border-0 align-top">
+                    <Fragment key={row.client_id}>
+                    <tr className={`align-top ${editing ? "" : "border-b border-gridline last:border-0"}`}>
                       <td className="px-5 py-2.5 font-medium text-ink">{row.client_id}</td>
                       <td className="px-5 py-2.5 text-ink-secondary">{KIND_LABEL[row.connector_kind] || row.connector_kind}</td>
                       <td className="px-5 py-2.5 text-ink-secondary">{row.sources.join(", ") || "—"}</td>
@@ -605,6 +617,15 @@ export default function DataSourcesPage() {
                               <span className="block text-[11px]" style={{ color: "#a01f1f" }}>{gen.error}</span>
                             )}
                           </div>
+                          {row.sources.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => setEditingMapping(editing ? null : row.client_id)}
+                              className="text-xs font-medium text-ink-muted transition-colors hover:text-ink"
+                            >
+                              {editing ? "Hide mapping" : "Edit mapping"}
+                            </button>
+                          )}
                           <button
                             type="button"
                             disabled={gen?.status === "running"}
@@ -617,6 +638,14 @@ export default function DataSourcesPage() {
                         </div>
                       </td>
                     </tr>
+                    {editing && (
+                      <tr className="border-b border-gridline last:border-0">
+                        <td colSpan={5} className="bg-black/2 px-5 py-4">
+                          <MappingEditor clientId={row.client_id} onClose={() => setEditingMapping(null)} />
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   );
                 })}
                 {!rowsLoading && rows.length === 0 && (

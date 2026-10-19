@@ -182,7 +182,7 @@ def onboard_data_source(req: OnboardRequest, tenant_id: str = Depends(auth.get_t
             sources[source_type]["mapping_method"] = "ai+manual" if sources[source_type]["mapping_method"] == "ai" else "fuzzy_match+manual"
 
     data_context.save_data_context(tenant_id, req.client_id, req.kind, req.config, sources)
-    return {"client_id": req.client_id, "sources": sources}
+    return {"client_id": req.client_id, "sources": data_context.mapping_summary(sources)}
 
 
 class OnboardInboxRequest(BaseModel):
@@ -256,6 +256,38 @@ def get_data_source(client_id: str, tenant_id: str = Depends(auth.get_tenant_id)
     if not ctx:
         raise HTTPException(404, "No data source saved for this client_id")
     return ctx
+
+
+class MappingUpdateRequest(BaseModel):
+    # source_type -> {canonical field -> real column, or None to un-map},
+    # e.g. {"sales": {"close_date": "closed_on"}}
+    overrides: dict[str, dict[str, str | None]]
+
+
+@app.get("/api/data-sources/{client_id}/mapping")
+def get_data_source_mapping(client_id: str, tenant_id: str = Depends(auth.get_tenant_id)):
+    """The column mapping only -- what the Data sources page's mapping editor
+    needs, without the connector config (credentials) the endpoint above returns."""
+    from . import data_context
+    ctx = data_context.load_data_context(tenant_id, client_id)
+    if not ctx:
+        raise HTTPException(404, "No data source saved for this client_id")
+    return {"client_id": client_id, "sources": data_context.mapping_summary(ctx["sources"])}
+
+
+@app.patch("/api/data-sources/{client_id}/mapping")
+def update_data_source_mapping(client_id: str, req: MappingUpdateRequest,
+                               tenant_id: str = Depends(auth.get_tenant_id)):
+    """Fix a mapping by hand -- the same manual_overrides /onboard accepts,
+    applied after the fact, so a wrong guess doesn't mean re-onboarding."""
+    from . import data_context
+    try:
+        sources = data_context.update_column_map(tenant_id, client_id, req.overrides)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+    if sources is None:
+        raise HTTPException(404, "No data source saved for this client_id")
+    return {"client_id": client_id, "sources": data_context.mapping_summary(sources)}
 
 
 @app.delete("/api/data-sources/{client_id}")

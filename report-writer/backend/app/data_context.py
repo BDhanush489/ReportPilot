@@ -122,6 +122,11 @@ CANONICAL_FIELDS = {
 }
 
 
+# The one field per source type a report can't be built without -- parsers.py's
+# normalize_* functions default-fill every other missing field.
+REQUIRED_FIELDS = {"analytics": "date", "seo": "url", "sales": "close_date"}
+
+
 def _normalize(name: str) -> str:
     return re.sub(r"[^a-z0-9]", "", name.lower())
 
@@ -275,6 +280,58 @@ def load_data_context(tenant_id: str, client_id: str) -> dict | None:
         }
     context["connector"]["config"] = _decrypt_config(context["connector"]["config"], _get_fernet())
     return context
+
+
+def mapping_summary(sources: dict) -> dict:
+    """The column-mapping half of a data context, safe to send to the browser
+    -- table, mapping, and the real columns to choose from, never the
+    connector config (that holds credentials)."""
+    summary = {}
+    for source_type, src in sources.items():
+        column_map = src.get("column_map", {})
+        required = REQUIRED_FIELDS.get(source_type)
+        summary[source_type] = {
+            "table": src.get("table"),
+            "column_map": column_map,
+            "mapping_method": src.get("mapping_method"),
+            "discovered_columns": [c["name"] for c in src.get("discovered_columns", [])],
+            "canonical_fields": CANONICAL_FIELDS.get(source_type, list(column_map)),
+            "required_field": required,
+            "missing_required": bool(required) and not column_map.get(required),
+        }
+    return summary
+
+
+def update_column_map(tenant_id: str, client_id: str,
+                      overrides: dict[str, dict[str, str | None]]) -> dict | None:
+    """Applies a human's mapping corrections, e.g. {"sales": {"close_date":
+    "closed_on"}} -- a None value un-maps that field. The fix for a mapping the
+    fuzzy matcher (or a small local model) got wrong, without re-onboarding.
+    None when there's no saved context for this client; ValueError when an
+    override names a source type, field, or column that doesn't exist."""
+    with db_mod.SessionLocal() as session:
+        row = session.query(DataContextRecord).filter_by(tenant_id=tenant_id, client_id=client_id).one_or_none()
+        if row is None:
+            return None
+        # A fresh dict, not an in-place edit: SQLAlchemy only notices a
+        # sa.JSON column changed when it's reassigned.
+        sources = json.loads(json.dumps(row.sources))
+        for source_type, fields in overrides.items():
+            if source_type not in sources:
+                raise ValueError(f"This client has no {source_type!r} source to map.")
+            src = sources[source_type]
+            real_names = {c["name"] for c in src.get("discovered_columns", [])}
+            for field, column in fields.items():
+                if field not in CANONICAL_FIELDS.get(source_type, []):
+                    raise ValueError(f"{field!r} isn't a {source_type} field.")
+                if column is not None and column not in real_names:
+                    raise ValueError(f"Table {src.get('table')!r} has no column named {column!r}.")
+                src["column_map"][field] = column
+            if not src.get("mapping_method", "").endswith("+manual"):
+                src["mapping_method"] = f"{src.get('mapping_method', 'unknown')}+manual"
+        row.sources = sources
+        session.commit()
+        return sources
 
 
 def delete_data_context(tenant_id: str, client_id: str) -> bool:

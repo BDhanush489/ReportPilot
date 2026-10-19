@@ -203,6 +203,8 @@ def normalize_deals(deals: pd.DataFrame) -> tuple[pd.DataFrame, list[dict]]:
     """Shared by the CSV/XLSX path (after alias-rename) and the SQL path — see
     normalize_web_analytics() docstring."""
     issues: list[dict] = []
+    if "close_date" not in deals.columns:
+        raise ValueError("Sales data must include a close date column")
     defaults = {
         "sales_rep": "Unassigned", "product": "Unknown", "region": "Unknown",
         "lead_source": "Unknown", "deal_stage": "Closed Won", "amount_usd": 0.0,
@@ -233,6 +235,11 @@ def normalize_deals(deals: pd.DataFrame) -> tuple[pd.DataFrame, list[dict]]:
     deals, dupe_issues = cleaning.dedupe(
         deals, source="sales", subset=["deal_id"] if "deal_id" in deals.columns else None)
     issues += dupe_issues
+
+    # metrics.py only counts deal_id, so a source with no ID column gets row
+    # numbers -- after the dedupe above, which falls back to whole-row matching.
+    if "deal_id" not in deals.columns:
+        deals["deal_id"] = range(1, len(deals) + 1)
 
     return deals, issues
 
